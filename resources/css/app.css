@@ -25,6 +25,7 @@
 
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
+    --color-primary-text: var(--primary-text);
 
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
@@ -86,6 +87,8 @@
     /* --brand / --brand-foreground are set in app.blade.php from the admin settings */
     --primary: var(--brand, #ffb020);
     --primary-foreground: var(--brand-foreground, #0a0e1a);
+    /* Brand color for text/lines on the page background: darkened in light mode so it stays readable */
+    --primary-text: color-mix(in oklab, var(--brand, #ffb020) 70%, black);
     --secondary: hsl(0, 0%, 96.1%);
     --secondary-foreground: hsl(0, 0%, 9%);
     --muted: hsl(0, 0%, 96.1%);
@@ -123,6 +126,7 @@
     --popover-foreground: #eef1f8;
     --primary: var(--brand, #ffb020);
     --primary-foreground: var(--brand-foreground, #0a0e1a);
+    --primary-text: var(--brand, #ffb020);
     --secondary: #1c2338;
     --secondary-foreground: #eef1f8;
     --muted: #141a2c;

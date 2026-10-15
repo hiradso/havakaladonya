@@ -42,8 +42,9 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             ...parent::share($request),
             'name' => config('app.name'),
-            'locale' => app()->getLocale(),
-            'direction' => app()->getLocale() === 'fa' ? 'rtl' : 'ltr',
+            // Closures are resolved at render time, i.e. after the SetLocale route middleware ran.
+            'locale' => fn () => app()->getLocale(),
+            'direction' => fn () => app()->getLocale() === 'fa' ? 'rtl' : 'ltr',
             'theme' => [
                 'primary' => Theme::primary(),
                 'primaryForeground' => Theme::primaryForeground(),

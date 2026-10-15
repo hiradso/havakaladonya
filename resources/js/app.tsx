@@ -1,6 +1,7 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
+import { DirectionProvider } from '@radix-ui/react-direction';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
@@ -10,18 +11,24 @@ declare global {
     const route: typeof routeFn;
 }
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const siteName = () => (document.documentElement.lang === 'en' ? 'Hava Kala Donya' : 'هوا کالا دنیا');
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => (title ? `${title} | ${siteName()}` : siteName()),
     resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
     setup({ el, App, props }) {
         const root = createRoot(el);
+        const dir = props.initialPage.props.direction === 'ltr' ? 'ltr' : 'rtl';
 
-        root.render(<App {...props} />);
+        // DirectionProvider makes menus, dropdowns and sheets open on the correct side in RTL.
+        root.render(
+            <DirectionProvider dir={dir}>
+                <App {...props} />
+            </DirectionProvider>,
+        );
     },
     progress: {
-        color: '#4B5563',
+        color: '#FFB020',
     },
 });
 
