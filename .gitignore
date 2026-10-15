@@ -26,3 +26,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+# Raw images downloaded from the old WordPress site (only the ones we use are copied into public/)
+/_wp-media/files/
+/_wp-media/index.tsv
