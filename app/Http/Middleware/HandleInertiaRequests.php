@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Theme;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -41,6 +42,12 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             ...parent::share($request),
             'name' => config('app.name'),
+            'locale' => app()->getLocale(),
+            'direction' => app()->getLocale() === 'fa' ? 'rtl' : 'ltr',
+            'theme' => [
+                'primary' => Theme::primary(),
+                'primaryForeground' => Theme::primaryForeground(),
+            ],
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),

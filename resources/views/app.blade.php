@@ -1,13 +1,37 @@
+@php
+    $locale = app()->getLocale();
+    $direction = $locale === 'fa' ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', $locale) }}" dir="{{ $direction }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        {{-- Self-hosted Persian/Latin font (public/fonts/vazirmatn) --}}
+        <link rel="preload" href="{{ asset('fonts/vazirmatn/Vazirmatn-Variable.woff2') }}" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" href="{{ asset('fonts/vazirmatn/vazirmatn.css') }}">
+
+        {{-- Brand color chosen in the admin panel (Settings → Appearance) --}}
+        <style>
+            :root {
+                --brand: {{ \App\Support\Theme::primary() }};
+                --brand-foreground: {{ \App\Support\Theme::primaryForeground() }};
+            }
+        </style>
+
+        {{-- Apply dark mode before the page paints, to avoid a white flash --}}
+        <script>
+            (function () {
+                try {
+                    var appearance = localStorage.getItem('appearance') || 'system';
+                    var dark = appearance === 'dark' || (appearance === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                    document.documentElement.classList.toggle('dark', dark);
+                } catch (e) {}
+            })();
+        </script>
 
         @routes
         @viteReactRefresh

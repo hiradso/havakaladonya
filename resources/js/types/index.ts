@@ -23,6 +23,9 @@ export interface NavItem {
 
 export interface SharedData {
     name: string;
+    locale: 'fa' | 'en';
+    direction: 'rtl' | 'ltr';
+    theme: { primary: string; primaryForeground: string };
     quote: { message: string; author: string };
     auth: Auth;
     [key: string]: unknown;

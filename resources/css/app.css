@@ -8,7 +8,7 @@
 
 @theme {
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        'Vazirmatn', ui-sans-serif, system-ui, Tahoma, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -83,8 +83,9 @@
     --card-foreground: hsl(0, 0%, 3.9%);
     --popover: hsl(0, 0%, 100%);
     --popover-foreground: hsl(0, 0%, 3.9%);
-    --primary: hsl(0, 0%, 9%);
-    --primary-foreground: hsl(0, 0%, 98%);
+    /* --brand / --brand-foreground are set in app.blade.php from the admin settings */
+    --primary: var(--brand, #ffb020);
+    --primary-foreground: var(--brand-foreground, #0a0e1a);
     --secondary: hsl(0, 0%, 96.1%);
     --secondary-foreground: hsl(0, 0%, 9%);
     --muted: hsl(0, 0%, 96.1%);
@@ -95,7 +96,7 @@
     --destructive-foreground: hsl(0, 0%, 98%);
     --border: hsl(0, 0%, 92.8%);
     --input: hsl(0, 0%, 89.8%);
-    --ring: hsl(0, 0%, 3.9%);
+    --ring: var(--brand, #ffb020);
     --chart-1: hsl(12, 76%, 61%);
     --chart-2: hsl(173, 58%, 39%);
     --chart-3: hsl(197, 37%, 24%);
@@ -104,47 +105,48 @@
     --radius: 0.5rem;
     --sidebar-background: hsl(0, 0%, 98%);
     --sidebar-foreground: hsl(240, 5.3%, 30%);
-    --sidebar-primary: hsl(0, 0%, 10%);
-    --sidebar-primary-foreground: hsl(0, 0%, 98%);
+    --sidebar-primary: var(--brand, #ffb020);
+    --sidebar-primary-foreground: var(--brand-foreground, #0a0e1a);
     --sidebar-accent: hsl(0, 0%, 94%);
     --sidebar-accent-foreground: hsl(0, 0%, 30%);
     --sidebar-border: hsl(0, 0%, 91%);
-    --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+    --sidebar-ring: var(--brand, #ffb020);
 }
 
 .dark {
-    --background: hsl(0, 0%, 3.9%);
-    --foreground: hsl(0, 0%, 98%);
-    --card: hsl(0, 0%, 3.9%);
-    --card-foreground: hsl(0, 0%, 98%);
-    --popover: hsl(0, 0%, 3.9%);
-    --popover-foreground: hsl(0, 0%, 98%);
-    --primary: hsl(0, 0%, 98%);
-    --primary-foreground: hsl(0, 0%, 9%);
-    --secondary: hsl(0, 0%, 14.9%);
-    --secondary-foreground: hsl(0, 0%, 98%);
-    --muted: hsl(0, 0%, 6.9%);
-    --muted-foreground: hsl(0, 0%, 63.9%);
-    --accent: hsl(0, 0%, 14.9%);
-    --accent-foreground: hsl(0, 0%, 98%);
+    /* Dark palette based on design option C (navy-black) */
+    --background: #0a0e1a;
+    --foreground: #eef1f8;
+    --card: #141a2c;
+    --card-foreground: #eef1f8;
+    --popover: #141a2c;
+    --popover-foreground: #eef1f8;
+    --primary: var(--brand, #ffb020);
+    --primary-foreground: var(--brand-foreground, #0a0e1a);
+    --secondary: #1c2338;
+    --secondary-foreground: #eef1f8;
+    --muted: #141a2c;
+    --muted-foreground: #a3acc5;
+    --accent: #1c2338;
+    --accent-foreground: #eef1f8;
     --destructive: hsl(0, 84%, 60%);
     --destructive-foreground: hsl(0, 0%, 98%);
-    --border: hsl(0, 0%, 14.9%);
-    --input: hsl(0, 0%, 14.9%);
-    --ring: hsl(0, 0%, 83.1%);
+    --border: #262e47;
+    --input: #262e47;
+    --ring: var(--brand, #ffb020);
     --chart-1: hsl(220, 70%, 50%);
     --chart-2: hsl(160, 60%, 45%);
     --chart-3: hsl(30, 80%, 55%);
     --chart-4: hsl(280, 65%, 60%);
     --chart-5: hsl(340, 75%, 55%);
-    --sidebar-background: hsl(0, 0%, 7%);
-    --sidebar-foreground: hsl(0, 0%, 80%);
-    --sidebar-primary: hsl(360, 100%, 100%);
-    --sidebar-primary-foreground: hsl(0, 0%, 100%);
-    --sidebar-accent: hsl(0, 0%, 15.9%);
-    --sidebar-accent-foreground: hsl(240, 4.8%, 95.9%);
-    --sidebar-border: hsl(0, 0%, 15.9%);
-    --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+    --sidebar-background: #0f1424;
+    --sidebar-foreground: #c9d0e3;
+    --sidebar-primary: var(--brand, #ffb020);
+    --sidebar-primary-foreground: var(--brand-foreground, #0a0e1a);
+    --sidebar-accent: #1c2338;
+    --sidebar-accent-foreground: #eef1f8;
+    --sidebar-border: #262e47;
+    --sidebar-ring: var(--brand, #ffb020);
 }
 
 @layer base {
