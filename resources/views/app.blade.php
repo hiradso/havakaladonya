@@ -20,11 +20,13 @@
         <link rel="preload" href="{{ asset('fonts/vazirmatn/Vazirmatn-Variable.woff2') }}" as="font" type="font/woff2" crossorigin>
         <link rel="stylesheet" href="{{ asset('fonts/vazirmatn/vazirmatn.css') }}">
 
-        {{-- Brand color chosen in the admin panel (Settings → Appearance) --}}
+        {{-- Brand colors chosen in the admin panel (Settings → Appearance) --}}
         <style>
             :root {
                 --brand: {{ \App\Support\Theme::primary() }};
                 --brand-foreground: {{ \App\Support\Theme::primaryForeground() }};
+                --brand-2: {{ \App\Support\Theme::secondary() }};
+                --brand-2-foreground: {{ \App\Support\Theme::secondaryForeground() }};
             }
         </style>
 

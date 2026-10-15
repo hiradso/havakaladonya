@@ -40,7 +40,8 @@ export default function Home() {
                 <h1 className="text-[2.6rem] leading-[1.2] font-black tracking-tight text-balance sm:text-6xl lg:text-7xl xl:text-8xl">
                     {t.home.heroTitleA}
                     <br />
-                    <span className="text-primary-text">{t.home.heroTitleB}</span>
+                    {/* Logo blue on light backgrounds, logo yellow on dark */}
+                    <span className="text-brand2-text dark:text-primary-text">{t.home.heroTitleB}</span>
                 </h1>
                 <p className="text-muted-foreground max-w-2xl text-base leading-8 sm:text-lg">{t.home.heroText}</p>
 
@@ -93,7 +94,7 @@ export default function Home() {
                     <svg viewBox="0 0 1000 420" className="h-auto w-full" role="img" aria-label={t.home.routesAria}>
                         <g fill="none" strokeWidth="3" strokeDasharray="8 10" strokeLinecap="round">
                             {DESTINATIONS.map((d) => (
-                                <path key={d.path} d={d.path} className={d.mode === 'land' ? 'stroke-primary-text' : 'stroke-sky-500'} />
+                                <path key={d.path} d={d.path} className={d.mode === 'land' ? 'stroke-primary-text' : 'stroke-brand2-text'} />
                             ))}
                         </g>
                         {DESTINATIONS.map((d) => (
@@ -130,7 +131,7 @@ export default function Home() {
                             {t.home.legendLand}
                         </span>
                         <span className="flex items-center gap-2">
-                            <span className="w-7 border-t-[3px] border-dashed border-sky-500" aria-hidden="true" />
+                            <span className="w-7 border-t-[3px] border-dashed border-brand2-text" aria-hidden="true" />
                             {t.home.legendAirSea}
                         </span>
                     </div>
@@ -179,7 +180,7 @@ export default function Home() {
                     <h2 id="blog-title" className="text-3xl font-black sm:text-4xl">
                         {t.home.blogTitle}
                     </h2>
-                    <Link href={url('/blog')} className="text-primary-text flex min-h-11 items-center gap-1 text-sm font-bold">
+                    <Link href={url('/blog')} className="text-brand2-text flex min-h-11 items-center gap-1 text-sm font-bold">
                         {t.home.allPosts}
                         <DirArrow className="size-4" />
                     </Link>
@@ -189,10 +190,10 @@ export default function Home() {
                         <Link
                             key={title}
                             href={url('/blog')}
-                            className="bg-card hover:border-primary flex min-h-40 flex-col justify-between gap-6 rounded-2xl border p-6 transition-colors"
+                            className="bg-card hover:border-brand2-text flex min-h-40 flex-col justify-between gap-6 rounded-2xl border p-6 transition-colors"
                         >
                             <strong className="text-lg leading-8">{title}</strong>
-                            <span className="text-primary-text flex items-center gap-1 text-sm font-bold">
+                            <span className="text-brand2-text flex items-center gap-1 text-sm font-bold">
                                 {t.home.readMore}
                                 <DirArrow className="size-4" />
                             </span>

@@ -12,6 +12,7 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -36,22 +37,29 @@ class AppearanceSettings extends Page
     {
         $this->form->fill([
             'primary_color' => Theme::primary(),
+            'secondary_color' => Theme::secondary(),
         ]);
     }
 
     public function form(Schema $schema): Schema
     {
+        $hex = fn (string $name, string $label, string $default, string $help) => ColorPicker::make($name)
+            ->label($label)
+            ->hex()
+            ->extraInputAttributes(['dir' => 'ltr'])
+            ->required()
+            ->regex('/^#[0-9a-fA-F]{6}$/')
+            ->helperText($help.' — پیش‌فرض: '.$default);
+
         return $schema
             ->components([
-                Section::make('رنگ اصلی')
-                    ->description('این رنگ روی دکمه‌ها، لینک‌ها و بخش‌های تأکیدی سایت و همین پنل اعمال می‌شود. رنگ متن روی آن (تیره یا روشن) خودکار انتخاب می‌شود.')
+                Section::make('رنگ‌های قالب')
+                    ->description('این رنگ‌ها روی سایت و همین پنل اعمال می‌شوند. رنگ متن روی آن‌ها (تیره یا روشن) خودکار انتخاب می‌شود. پیش‌فرض‌ها از روی لوگو انتخاب شده‌اند.')
                     ->schema([
-                        ColorPicker::make('primary_color')
-                            ->label('رنگ اصلی قالب')
-                            ->hex()
-                            ->required()
-                            ->regex('/^#[0-9a-fA-F]{6}$/')
-                            ->helperText('پیش‌فرض: '.Theme::DEFAULT_PRIMARY),
+                        Grid::make(['default' => 1, 'md' => 2])->schema([
+                            $hex('primary_color', 'رنگ اصلی', Theme::DEFAULT_PRIMARY, 'دکمه‌ها، تیترهای رنگی و بخش‌های تأکیدی'),
+                            $hex('secondary_color', 'رنگ دوم', Theme::DEFAULT_SECONDARY, 'لینک‌ها، مسیرهای هوایی و دریایی و نشان‌های اطلاعاتی'),
+                        ]),
                     ]),
             ])
             ->statePath('data');
@@ -70,10 +78,10 @@ class AppearanceSettings extends Page
                                 ->label('ذخیره')
                                 ->submit('save'),
                             Action::make('reset')
-                                ->label('بازگشت به رنگ پیش‌فرض')
+                                ->label('بازگشت به رنگ‌های لوگو')
                                 ->color('gray')
                                 ->requiresConfirmation()
-                                ->action(fn () => $this->saveColor(Theme::DEFAULT_PRIMARY)),
+                                ->action(fn () => $this->saveColors(Theme::DEFAULT_PRIMARY, Theme::DEFAULT_SECONDARY)),
                         ]),
                     ]),
             ]);
@@ -81,19 +89,22 @@ class AppearanceSettings extends Page
 
     public function save(): void
     {
-        $this->saveColor($this->form->getState()['primary_color']);
+        $state = $this->form->getState();
+
+        $this->saveColors($state['primary_color'], $state['secondary_color']);
     }
 
-    protected function saveColor(string $color): void
+    protected function saveColors(string $primary, string $secondary): void
     {
-        Setting::set('primary_color', strtoupper($color));
+        Setting::set('primary_color', strtoupper($primary));
+        Setting::set('secondary_color', strtoupper($secondary));
 
         Notification::make()
             ->success()
-            ->title('رنگ قالب ذخیره شد')
+            ->title('رنگ‌های قالب ذخیره شد')
             ->send();
 
-        // Reload so the panel picks up the new color immediately.
+        // Reload so the panel picks up the new colors immediately.
         $this->redirect(static::getUrl());
     }
 }

@@ -5,27 +5,44 @@ namespace App\Support;
 use App\Models\Setting;
 
 /**
- * One place that decides the brand color for BOTH the public site
+ * One place that decides the brand colors for BOTH the public site
  * (CSS variables in app.blade.php) and the Filament admin panel.
+ *
+ * Defaults follow the company logo: golden yellow + royal blue.
  */
 class Theme
 {
-    public const DEFAULT_PRIMARY = '#FFB020';
+    /** Main color: buttons, highlights. A warm version of the logo yellow (#FFE500) that stays readable. */
+    public const DEFAULT_PRIMARY = '#FFC20E';
+
+    /** Second color: secondary accents (air/sea routes, links, info badges). The logo blue. */
+    public const DEFAULT_SECONDARY = '#0026B4';
 
     public static function primary(): string
     {
-        $color = Setting::get('primary_color', self::DEFAULT_PRIMARY);
-
-        return self::isHex($color) ? strtoupper($color) : self::DEFAULT_PRIMARY;
+        return self::color('primary_color', self::DEFAULT_PRIMARY);
     }
 
-    /**
-     * Text color that stays readable on top of the primary color
-     * (dark text on light colors such as yellow, white text on dark colors).
-     */
+    public static function secondary(): string
+    {
+        return self::color('secondary_color', self::DEFAULT_SECONDARY);
+    }
+
+    /** Readable text color on top of the primary color. */
     public static function primaryForeground(): string
     {
-        return self::luminance(self::primary()) > 0.45 ? '#0A0E1A' : '#FFFFFF';
+        return self::foregroundFor(self::primary());
+    }
+
+    /** Readable text color on top of the secondary color. */
+    public static function secondaryForeground(): string
+    {
+        return self::foregroundFor(self::secondary());
+    }
+
+    public static function foregroundFor(string $hex): string
+    {
+        return self::luminance($hex) > 0.45 ? '#0A0E1A' : '#FFFFFF';
     }
 
     public static function isHex(mixed $color): bool
@@ -47,5 +64,12 @@ class Theme
         );
 
         return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+    }
+
+    private static function color(string $key, string $default): string
+    {
+        $color = Setting::get($key, $default);
+
+        return self::isHex($color) ? strtoupper($color) : $default;
     }
 }

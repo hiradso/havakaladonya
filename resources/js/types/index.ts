@@ -25,7 +25,7 @@ export interface SharedData {
     name: string;
     locale: 'fa' | 'en';
     direction: 'rtl' | 'ltr';
-    theme: { primary: string; primaryForeground: string };
+    theme: { primary: string; primaryForeground: string; secondary: string; secondaryForeground: string };
     quote: { message: string; author: string };
     auth: Auth;
     [key: string]: unknown;

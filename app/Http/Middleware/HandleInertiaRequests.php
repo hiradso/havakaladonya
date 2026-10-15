@@ -48,6 +48,8 @@ class HandleInertiaRequests extends Middleware
             'theme' => [
                 'primary' => Theme::primary(),
                 'primaryForeground' => Theme::primaryForeground(),
+                'secondary' => Theme::secondary(),
+                'secondaryForeground' => Theme::secondaryForeground(),
             ],
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [

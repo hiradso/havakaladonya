@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
             // the same value the public site uses.
             ->colors(fn (): array => [
                 'primary' => Color::hex(Theme::primary()),
+                'info' => Color::hex(Theme::secondary()),
                 'gray' => Color::Slate,
             ])
             // Self-hosted Persian font (public/fonts/vazirmatn), no external CDN.
