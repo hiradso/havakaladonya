@@ -10,6 +10,12 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        <link rel="icon" href="/favicon.ico" sizes="any">
+        <link rel="icon" href="/images/brand/favicon-32.png" type="image/png" sizes="32x32">
+        <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png">
+        <meta name="theme-color" content="#0a0e1a" media="(prefers-color-scheme: dark)">
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
         {{-- Self-hosted Persian/Latin font (public/fonts/vazirmatn) --}}
         <link rel="preload" href="{{ asset('fonts/vazirmatn/Vazirmatn-Variable.woff2') }}" as="font" type="font/woff2" crossorigin>
         <link rel="stylesheet" href="{{ asset('fonts/vazirmatn/vazirmatn.css') }}">

@@ -32,6 +32,7 @@ const en: typeof fa = {
         trackingPlaceholder: 'Enter your tracking code',
         trackingButton: 'Track',
         quoteButton: 'Get a quote',
+        photoAlt: 'Container ship at port with a cargo plane overhead',
         routesTitle: 'Main routes',
         routesAria: 'Schematic map of freight routes from Tehran to Europe, Russia, Central Asia, China and India',
         origin: 'Tehran',

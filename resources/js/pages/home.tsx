@@ -70,6 +70,20 @@ export default function Home() {
                 </form>
             </section>
 
+            {/* Photo banner */}
+            <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6">
+                <img
+                    src="/images/photos/port-plane-800.webp"
+                    srcSet="/images/photos/port-plane-800.webp 800w, /images/photos/port-plane-1600.webp 1600w"
+                    sizes="(min-width: 1280px) 1232px, 100vw"
+                    alt={t.home.photoAlt}
+                    width={1600}
+                    height={900}
+                    fetchPriority="high"
+                    className="aspect-[16/9] w-full rounded-3xl object-cover sm:aspect-[21/9]"
+                />
+            </section>
+
             {/* Route map */}
             <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6" aria-labelledby="routes-title">
                 <div className="bg-card overflow-hidden rounded-3xl border p-4 sm:p-8">

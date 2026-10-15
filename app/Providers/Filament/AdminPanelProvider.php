@@ -30,6 +30,11 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('هوا کالا دنیا')
+            ->brandLogo(asset('images/brand/logo-full.webp'))
+            // The full logo's blue text is hard to read on a dark background, so dark mode shows the mark only.
+            ->darkModeBrandLogo(asset('images/brand/logo-mark.webp'))
+            ->brandLogoHeight('2.75rem')
+            ->favicon(asset('images/brand/favicon-32.png'))
             // Brand color comes from the "Appearance" settings page,
             // the same value the public site uses.
             ->colors(fn (): array => [

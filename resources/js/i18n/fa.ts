@@ -30,6 +30,7 @@ const fa = {
         trackingPlaceholder: 'کد رهگیری را وارد کنید',
         trackingButton: 'رهگیری',
         quoteButton: 'استعلام قیمت',
+        photoAlt: 'کشتی کانتینری در بندر و هواپیمای باری در حال پرواز',
         routesTitle: 'مسیرهای اصلی',
         routesAria: 'نقشه‌ی شماتیک مسیرهای حمل از تهران به اروپا، روسیه، آسیای میانه، چین و هند',
         origin: 'تهران',
