@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\QuoteRequestController;
+use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,8 +20,11 @@ $publicPages = function (string $locale) {
         ->name("{$locale}.quote.store");
     Route::get('quote/thanks', [QuoteRequestController::class, 'thanks'])->name("{$locale}.quote.thanks");
 
+    // Shipment tracking: /tracking?code=HKD-XXXXXXXX (rate-limited inside the controller)
+    Route::get('tracking', [TrackingController::class, 'show'])->name("{$locale}.tracking");
+
     // Pages that are not built yet show a "coming soon" screen instead of a 404.
-    foreach (['services', 'tracking', 'about', 'blog', 'contact'] as $page) {
+    foreach (['services', 'about', 'blog', 'contact'] as $page) {
         Route::get($page, fn () => Inertia::render('coming-soon', ['page' => $page]))->name("{$locale}.{$page}");
     }
 };

@@ -40,13 +40,15 @@ export function localizedUrl(path: string, locale: Locale): string {
 /** URL of the current page in the other language. */
 export function switchLocaleUrl(current: Locale): string {
     const path = typeof window === 'undefined' ? '/' : window.location.pathname;
+    // Keep the query string, e.g. ?code=… on the tracking page.
+    const search = typeof window === 'undefined' ? '' : window.location.search;
 
     if (current === 'en') {
         const withoutPrefix = path.replace(/^\/en(?=\/|$)/, '');
-        return withoutPrefix === '' ? '/' : withoutPrefix;
+        return (withoutPrefix === '' ? '/' : withoutPrefix) + search;
     }
 
-    return localizedUrl(path, 'en');
+    return localizedUrl(path, 'en') + search;
 }
 
 const PERSIAN_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
