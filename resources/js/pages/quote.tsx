@@ -36,13 +36,20 @@ type QuoteFormData = {
 const MODES = ['air', 'sea', 'road', 'rail', 'unsure'] as const;
 const LOAD_TYPES = ['fcl', 'lcl', 'ftl', 'groupage', 'unsure'] as const;
 
+function initialMode(): string {
+    if (typeof window === 'undefined') return '';
+    const mode = new URLSearchParams(window.location.search).get('mode') ?? '';
+    return (MODES as readonly string[]).includes(mode) ? mode : '';
+}
+
 export default function Quote({ form: config }: { form: Record<OptionalField, FieldConfig> }) {
     const { t, url } = useI18n();
     const q = t.quote;
 
     const { data, setData, post, processing, errors, transform } = useForm<QuoteFormData>({
         website: '',
-        transport_mode: '',
+        // Service pages link here with ?mode=air etc. to pre-select the transport mode.
+        transport_mode: initialMode(),
         origin: '',
         destination: '',
         cargo_type: '',
@@ -153,10 +160,23 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                 </FormCard>
 
                 {/* Cargo */}
-                {(show('cargo_type') || show('weight_kg') || show('volume_cbm') || show('load_type') || show('services') || show('description') || show('attachment')) && (
+                {(show('cargo_type') ||
+                    show('weight_kg') ||
+                    show('volume_cbm') ||
+                    show('load_type') ||
+                    show('services') ||
+                    show('description') ||
+                    show('attachment')) && (
                     <FormCard title={q.sectionCargo}>
                         {show('cargo_type') && (
-                            <Field id="cargo_type" label={q.cargoType} required={req('cargo_type')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.cargo_type}>
+                            <Field
+                                id="cargo_type"
+                                label={q.cargoType}
+                                required={req('cargo_type')}
+                                requiredLabel={q.required}
+                                optionalLabel={q.optional}
+                                error={errors.cargo_type}
+                            >
                                 <Input
                                     id="cargo_type"
                                     value={data.cargo_type}
@@ -171,7 +191,14 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                         {(show('weight_kg') || show('volume_cbm')) && (
                             <div className="grid grid-cols-2 gap-4">
                                 {show('weight_kg') && (
-                                    <Field id="weight_kg" label={q.weight} required={req('weight_kg')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.weight_kg}>
+                                    <Field
+                                        id="weight_kg"
+                                        label={q.weight}
+                                        required={req('weight_kg')}
+                                        requiredLabel={q.required}
+                                        optionalLabel={q.optional}
+                                        error={errors.weight_kg}
+                                    >
                                         <Input
                                             id="weight_kg"
                                             inputMode="decimal"
@@ -183,7 +210,14 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                                     </Field>
                                 )}
                                 {show('volume_cbm') && (
-                                    <Field id="volume_cbm" label={q.volume} required={req('volume_cbm')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.volume_cbm}>
+                                    <Field
+                                        id="volume_cbm"
+                                        label={q.volume}
+                                        required={req('volume_cbm')}
+                                        requiredLabel={q.required}
+                                        optionalLabel={q.optional}
+                                        error={errors.volume_cbm}
+                                    >
                                         <Input
                                             id="volume_cbm"
                                             inputMode="decimal"
@@ -216,13 +250,30 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                         {show('services') && (
                             <fieldset className="flex flex-col gap-3">
                                 <legend className="mb-3 text-sm font-bold">{q.services}</legend>
-                                <CheckRow id="needs_clearance" label={q.clearance} checked={data.needs_clearance} onChange={(v) => setData('needs_clearance', v)} />
-                                <CheckRow id="needs_insurance" label={q.insurance} checked={data.needs_insurance} onChange={(v) => setData('needs_insurance', v)} />
+                                <CheckRow
+                                    id="needs_clearance"
+                                    label={q.clearance}
+                                    checked={data.needs_clearance}
+                                    onChange={(v) => setData('needs_clearance', v)}
+                                />
+                                <CheckRow
+                                    id="needs_insurance"
+                                    label={q.insurance}
+                                    checked={data.needs_insurance}
+                                    onChange={(v) => setData('needs_insurance', v)}
+                                />
                             </fieldset>
                         )}
 
                         {show('description') && (
-                            <Field id="description" label={q.description} required={req('description')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.description}>
+                            <Field
+                                id="description"
+                                label={q.description}
+                                required={req('description')}
+                                requiredLabel={q.required}
+                                optionalLabel={q.optional}
+                                error={errors.description}
+                            >
                                 <Textarea
                                     id="description"
                                     rows={4}
@@ -235,7 +286,14 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                         )}
 
                         {show('attachment') && (
-                            <Field id="attachment" label={q.attachment} required={req('attachment')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.attachment}>
+                            <Field
+                                id="attachment"
+                                label={q.attachment}
+                                required={req('attachment')}
+                                requiredLabel={q.required}
+                                optionalLabel={q.optional}
+                                error={errors.attachment}
+                            >
                                 <label
                                     htmlFor="attachment"
                                     className="hover:border-primary-text flex min-h-14 cursor-pointer items-center gap-3 rounded-md border border-dashed px-4 py-3 text-sm"
@@ -283,7 +341,14 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                             />
                         </Field>
                         {show('company') && (
-                            <Field id="company" label={q.company} required={req('company')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.company}>
+                            <Field
+                                id="company"
+                                label={q.company}
+                                required={req('company')}
+                                requiredLabel={q.required}
+                                optionalLabel={q.optional}
+                                error={errors.company}
+                            >
                                 <Input
                                     id="company"
                                     autoComplete="organization"
@@ -295,7 +360,14 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
                             </Field>
                         )}
                         {show('email') && (
-                            <Field id="email" label={q.email} required={req('email')} requiredLabel={q.required} optionalLabel={q.optional} error={errors.email}>
+                            <Field
+                                id="email"
+                                label={q.email}
+                                required={req('email')}
+                                requiredLabel={q.required}
+                                optionalLabel={q.optional}
+                                error={errors.email}
+                            >
                                 <Input
                                     id="email"
                                     type="email"
@@ -395,7 +467,14 @@ function ChoiceGroup({
                             invalid && !checked && 'border-destructive/60',
                         )}
                     >
-                        <input type="radio" name={name} value={option.value} checked={checked} onChange={() => onChange(option.value)} className="sr-only" />
+                        <input
+                            type="radio"
+                            name={name}
+                            value={option.value}
+                            checked={checked}
+                            onChange={() => onChange(option.value)}
+                            className="sr-only"
+                        />
                         {option.label}
                     </label>
                 );

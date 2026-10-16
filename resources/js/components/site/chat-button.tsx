@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useI18n } from '@/i18n';
+import { CONTACT } from '@/lib/contact';
 import { Mail, MessageCircle, Phone } from 'lucide-react';
 
 /**
@@ -26,15 +27,21 @@ export default function ChatButton() {
                     <SheetTitle className="text-start">{t.chat.title}</SheetTitle>
                     <SheetDescription className="text-start leading-7">{t.chat.soon}</SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
                     <Button asChild size="lg" className="h-12">
-                        <a href="tel:+989123336855">
+                        <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
+                            <MessageCircle />
+                            {t.contact.whatsapp}
+                        </a>
+                    </Button>
+                    <Button asChild size="lg" variant="outline" className="h-12">
+                        <a href={CONTACT.mobile.href}>
                             <Phone />
                             {t.chat.call}
                         </a>
                     </Button>
                     <Button asChild size="lg" variant="outline" className="h-12">
-                        <a href="mailto:info@havakaladonya.com">
+                        <a href={`mailto:${CONTACT.email}`}>
                             <Mail />
                             {t.chat.email}
                         </a>

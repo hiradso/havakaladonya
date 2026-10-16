@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getServices } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { Head, Link, router } from '@inertiajs/react';
@@ -23,7 +24,8 @@ function DirArrow({ className = '' }: { className?: string }) {
 }
 
 export default function Home() {
-    const { t, url, digits } = useI18n();
+    const { t, url, digits, locale } = useI18n();
+    const services = getServices(locale);
     const [code, setCode] = useState('');
 
     const submitTracking = (e: FormEvent) => {
@@ -50,7 +52,10 @@ export default function Home() {
                         {t.home.trackingLabel}
                     </Label>
                     <div className="relative flex-1">
-                        <Search className="text-muted-foreground pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2" aria-hidden="true" />
+                        <Search
+                            className="text-muted-foreground pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2"
+                            aria-hidden="true"
+                        />
                         <Input
                             id="tracking-code"
                             value={code}
@@ -131,7 +136,7 @@ export default function Home() {
                             {t.home.legendLand}
                         </span>
                         <span className="flex items-center gap-2">
-                            <span className="w-7 border-t-[3px] border-dashed border-brand2-text" aria-hidden="true" />
+                            <span className="border-brand2-text w-7 border-t-[3px] border-dashed" aria-hidden="true" />
                             {t.home.legendAirSea}
                         </span>
                     </div>
@@ -144,16 +149,16 @@ export default function Home() {
                     {t.home.servicesTitle}
                 </h2>
                 <ol>
-                    {t.home.services.map((service, i) => (
-                        <li key={service.title}>
+                    {services.map((service, i) => (
+                        <li key={service.slug}>
                             <Link
-                                href={url('/services')}
+                                href={url(`/services/${service.slug}`)}
                                 className="group grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-3 gap-y-1 border-t py-5 sm:grid-cols-[3rem_minmax(0,16rem)_1fr_auto] sm:gap-x-6 sm:py-6"
                             >
                                 <span className="text-primary-text text-sm font-bold tabular-nums">{digits(String(i + 1).padStart(2, '0'))}</span>
                                 <strong className="text-xl font-black sm:text-2xl">{service.title}</strong>
                                 <span className="text-muted-foreground col-start-2 row-start-2 text-sm leading-7 sm:col-start-3 sm:row-start-1 sm:text-base">
-                                    {service.text}
+                                    {service.short}
                                 </span>
                                 <DirArrow className="text-primary-text col-start-3 row-start-1 size-5 transition-transform group-hover:translate-x-1 sm:col-start-4 rtl:group-hover:-translate-x-1" />
                             </Link>

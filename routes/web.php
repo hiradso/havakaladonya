@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuoteRequestController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
@@ -23,8 +25,17 @@ $publicPages = function (string $locale) {
     // Shipment tracking: /tracking?code=HKD-XXXXXXXX (rate-limited inside the controller)
     Route::get('tracking', [TrackingController::class, 'show'])->name("{$locale}.tracking");
 
+    // Company pages
+    Route::get('services', [PageController::class, 'services'])->name("{$locale}.services");
+    Route::get('services/{slug}', [PageController::class, 'service'])->name("{$locale}.service");
+    Route::get('about', [PageController::class, 'about'])->name("{$locale}.about");
+    Route::get('contact', [ContactController::class, 'show'])->name("{$locale}.contact");
+    Route::post('contact', [ContactController::class, 'store'])
+        ->middleware('throttle:5,10') // max 5 messages per 10 minutes per visitor
+        ->name("{$locale}.contact.store");
+
     // Pages that are not built yet show a "coming soon" screen instead of a 404.
-    foreach (['services', 'about', 'blog', 'contact'] as $page) {
+    foreach (['blog'] as $page) {
         Route::get($page, fn () => Inertia::render('coming-soon', ['page' => $page]))->name("{$locale}.{$page}");
     }
 };
@@ -43,3 +54,6 @@ Route::middleware(['auth'])->group(function () {
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+
+// Old WordPress addresses (e.g. /حمل-و-نقل-هوایی/) → new pages with a permanent redirect.
+Route::fallback([PageController::class, 'legacy'])->middleware('locale:fa');
