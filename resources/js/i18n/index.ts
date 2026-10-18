@@ -13,7 +13,7 @@ const dictionaries: Record<Locale, Dictionary> = { fa, en };
  * Persian lives at "/", English at "/en".
  */
 export function useI18n() {
-    const { locale } = usePage<SharedData>().props;
+    const { locale, alternateUrl } = usePage<SharedData & { alternateUrl?: string }>().props;
     const current: Locale = locale === 'en' ? 'en' : 'fa';
 
     return {
@@ -21,7 +21,8 @@ export function useI18n() {
         dir: current === 'fa' ? ('rtl' as const) : ('ltr' as const),
         t: dictionaries[current],
         url: (path: string) => localizedUrl(path, current),
-        switchUrl: () => switchLocaleUrl(current),
+        // A page can say where its other-language version lives (e.g. an article → the other blog).
+        switchUrl: () => alternateUrl ?? switchLocaleUrl(current),
         /** Shows numbers with Persian digits on the Persian site (e.g. phone numbers, counts). */
         digits: (value: string | number) => localizeDigits(value, current),
     };

@@ -1,9 +1,11 @@
+import PostCard from '@/components/site/post-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getServices } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
+import type { PostCard as PostCardData } from '@/types/blog';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowRight, Search } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
@@ -23,7 +25,7 @@ function DirArrow({ className = '' }: { className?: string }) {
     return <ArrowRight className={`rtl:-scale-x-100 ${className}`} aria-hidden="true" />;
 }
 
-export default function Home() {
+export default function Home({ posts = [] }: { posts?: PostCardData[] }) {
     const { t, url, digits, locale } = useI18n();
     const services = getServices(locale);
     const [code, setCode] = useState('');
@@ -179,33 +181,27 @@ export default function Home() {
                 </dl>
             </section>
 
-            {/* Articles */}
-            <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24" aria-labelledby="blog-title">
-                <div className="mb-6 flex items-end justify-between gap-4">
-                    <h2 id="blog-title" className="text-3xl font-black sm:text-4xl">
-                        {t.home.blogTitle}
-                    </h2>
-                    <Link href={url('/blog')} className="text-brand2-text flex min-h-11 items-center gap-1 text-sm font-bold">
-                        {t.home.allPosts}
-                        <DirArrow className="size-4" />
-                    </Link>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {t.home.posts.map((title) => (
-                        <Link
-                            key={title}
-                            href={url('/blog')}
-                            className="bg-card hover:border-brand2-text flex min-h-40 flex-col justify-between gap-6 rounded-2xl border p-6 transition-colors"
-                        >
-                            <strong className="text-lg leading-8">{title}</strong>
-                            <span className="text-brand2-text flex items-center gap-1 text-sm font-bold">
-                                {t.home.readMore}
-                                <DirArrow className="size-4" />
-                            </span>
+            {/* Latest articles (hidden until something is published) */}
+            {posts.length > 0 && (
+                <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24" aria-labelledby="blog-title">
+                    <div className="mb-6 flex items-end justify-between gap-4">
+                        <h2 id="blog-title" className="text-3xl font-black sm:text-4xl">
+                            {t.home.blogTitle}
+                        </h2>
+                        <Link href={url('/blog')} className="text-brand2-text flex min-h-11 items-center gap-1 text-sm font-bold">
+                            {t.home.allPosts}
+                            <DirArrow className="size-4" />
                         </Link>
-                    ))}
-                </div>
-            </section>
+                    </div>
+                    <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {posts.map((post) => (
+                            <li key={post.slug}>
+                                <PostCard post={post} headingLevel="h3" />
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
 
             {/* Call to action */}
             <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6">

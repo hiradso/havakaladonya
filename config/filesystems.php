@@ -40,7 +40,8 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            // Relative address: images work on any domain (local, staging, the real site).
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],

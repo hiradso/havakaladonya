@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Support\Services;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,19 @@ use Inertia\Response;
 
 class PageController extends Controller
 {
+    public function home(): Response
+    {
+        return Inertia::render('home', [
+            'posts' => Post::published()
+                ->where('locale', app()->getLocale())
+                ->latest('published_at')
+                ->limit(4)
+                ->get()
+                ->map->toCard()
+                ->values(),
+        ]);
+    }
+
     public function services(): Response
     {
         return Inertia::render('services');
@@ -31,12 +45,17 @@ class PageController extends Controller
     public function legacy(Request $request): RedirectResponse
     {
         $path = trim(rawurldecode($request->path()), '/');
-        $english = str_starts_with($path, 'en/');
+        $english = str_starts_with($path.'/', 'en/');
         $key = $english ? substr($path, 3) : $path;
 
-        $target = Services::LEGACY_REDIRECTS[$key] ?? null;
-        abort_if($target === null, 404);
+        if ($target = Services::LEGACY_REDIRECTS[$key] ?? null) {
+            return redirect($english ? '/en'.$target : $target, 301);
+        }
 
-        return redirect($english ? '/en'.$target : $target, 301);
+        // Imported blog articles remember their old address.
+        $post = Post::published()->where('legacy_path', $path)->first();
+        abort_if($post === null, 404);
+
+        return redirect($post->url(), 301);
     }
 }

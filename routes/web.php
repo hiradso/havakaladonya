@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuoteRequestController;
@@ -13,7 +14,7 @@ use Inertia\Inertia;
 |   English:  /en          /en/services ...
 */
 $publicPages = function (string $locale) {
-    Route::get('/', fn () => Inertia::render('home'))->name("{$locale}.home");
+    Route::get('/', [PageController::class, 'home'])->name("{$locale}.home");
 
     // Quote request form
     Route::get('quote', [QuoteRequestController::class, 'create'])->name("{$locale}.quote");
@@ -34,10 +35,9 @@ $publicPages = function (string $locale) {
         ->middleware('throttle:5,10') // max 5 messages per 10 minutes per visitor
         ->name("{$locale}.contact.store");
 
-    // Pages that are not built yet show a "coming soon" screen instead of a 404.
-    foreach (['blog'] as $page) {
-        Route::get($page, fn () => Inertia::render('coming-soon', ['page' => $page]))->name("{$locale}.{$page}");
-    }
+    // Blog (Persian article addresses keep their Persian letters)
+    Route::get('blog', [BlogController::class, 'index'])->name("{$locale}.blog");
+    Route::get('blog/{slug}', [BlogController::class, 'show'])->where('slug', '[^/]+')->name("{$locale}.post");
 };
 
 Route::middleware('locale:fa')->group(fn () => $publicPages('fa'));
