@@ -25,6 +25,7 @@ const en: typeof fa = {
     },
     home: {
         metaTitle: 'International freight, customs clearance and procurement',
+        metaDescription: 'Hava Kala Donya: air, sea, road and rail freight from Iran to Europe, Russia, Central Asia, China and India, with customs clearance, procurement and online shipment tracking.',
         heroTitleA: 'From any origin,',
         heroTitleB: 'to any destination.',
         heroText: 'Air, sea, road and rail freight together with procurement and customs clearance — with online tracking for every shipment.',
@@ -55,6 +56,7 @@ const en: typeof fa = {
     },
     quote: {
         metaTitle: 'Request a freight quote',
+        metaDescription: 'Request a quote for air, sea, road or rail freight. Send your cargo and route details and the Hava Kala Donya team will contact you.',
         title: 'Request a freight quote',
         intro: 'Tell us about your cargo and route. Our team will contact you during business hours with a price.',
         required: 'required',
@@ -98,6 +100,7 @@ const en: typeof fa = {
     },
     tracking: {
         metaTitle: 'Track your shipment',
+        metaDescription: 'Track your Hava Kala Donya shipment online with its tracking code: current status, journey steps and estimated delivery.',
         title: 'Track your shipment',
         intro: 'Enter the tracking code our team sent you to see the latest status of your cargo.',
         label: 'Tracking code',

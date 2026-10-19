@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuoteRequestController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +43,9 @@ $publicPages = function (string $locale) {
 
 Route::middleware('locale:fa')->group(fn () => $publicPages('fa'));
 Route::prefix('en')->middleware('locale:en')->group(fn () => $publicPages('en'));
+
+// List of all pages for search engines
+Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
 // Starter-kit routes kept for now (customer accounts come in phase 2).
 Route::get('/home', fn () => redirect('/'))->name('home');

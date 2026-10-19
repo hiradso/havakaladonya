@@ -1,4 +1,5 @@
 import InputError from '@/components/input-error';
+import Seo from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { cn } from '@/lib/utils';
-import { Head, useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { Paperclip } from 'lucide-react';
 import { type FormEvent, type ReactNode } from 'react';
 
@@ -36,20 +37,20 @@ type QuoteFormData = {
 const MODES = ['air', 'sea', 'road', 'rail', 'unsure'] as const;
 const LOAD_TYPES = ['fcl', 'lcl', 'ftl', 'groupage', 'unsure'] as const;
 
-function initialMode(): string {
-    if (typeof window === 'undefined') return '';
-    const mode = new URLSearchParams(window.location.search).get('mode') ?? '';
+function initialMode(pageUrl: string): string {
+    const mode = new URLSearchParams(pageUrl.split('?')[1] ?? '').get('mode') ?? '';
     return (MODES as readonly string[]).includes(mode) ? mode : '';
 }
 
 export default function Quote({ form: config }: { form: Record<OptionalField, FieldConfig> }) {
     const { t, url } = useI18n();
+    const { url: pageUrl } = usePage();
     const q = t.quote;
 
     const { data, setData, post, processing, errors, transform } = useForm<QuoteFormData>({
         website: '',
         // Service pages link here with ?mode=air etc. to pre-select the transport mode.
-        transport_mode: initialMode(),
+        transport_mode: initialMode(pageUrl),
         origin: '',
         destination: '',
         cargo_type: '',
@@ -99,7 +100,7 @@ export default function Quote({ form: config }: { form: Record<OptionalField, Fi
 
     return (
         <SiteLayout>
-            <Head title={q.metaTitle} />
+            <Seo title={q.metaTitle} description={q.metaDescription} />
 
             <section className="mx-auto max-w-3xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14">
                 <h1 className="text-3xl font-black sm:text-5xl">{q.title}</h1>

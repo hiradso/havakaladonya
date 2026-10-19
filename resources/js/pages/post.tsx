@@ -1,10 +1,11 @@
 import ContactCta from '@/components/site/contact-cta';
 import PostCard from '@/components/site/post-card';
+import Seo, { useAppUrl } from '@/components/site/seo';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { formatDate } from '@/lib/format';
 import type { PostCard as PostCardData } from '@/types/blog';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { ChevronLeft, Clock } from 'lucide-react';
 
 interface Props {
@@ -14,16 +15,39 @@ interface Props {
 
 export default function PostPage({ post, related }: Props) {
     const { t, url, locale, digits } = useI18n();
+    const appUrl = useAppUrl();
 
     return (
         <SiteLayout>
-            <Head title={post.metaTitle}>
-                <meta name="description" content={post.metaDescription} />
-                <meta property="og:type" content="article" />
-                <meta property="og:title" content={post.title} />
-                <meta property="og:description" content={post.metaDescription} />
-                {post.cover && <meta property="og:image" content={post.cover} />}
-            </Head>
+            <Seo
+                title={post.metaTitle}
+                description={post.metaDescription}
+                image={post.cover}
+                type="article"
+                alternates={false}
+                breadcrumbs={[
+                    { name: t.nav.blog, path: url('/blog') },
+                    { name: post.title, path: post.url },
+                ]}
+                jsonLd={[
+                    {
+                        '@type': 'BlogPosting',
+                        headline: post.title,
+                        description: post.metaDescription,
+                        image: post.cover ? [appUrl + post.cover] : undefined,
+                        datePublished: post.date,
+                        inLanguage: locale,
+                        mainEntityOfPage: appUrl + post.url,
+                        author: { '@type': 'Organization', name: t.brand.name, url: appUrl },
+                        publisher: {
+                            '@id': `${appUrl}/#organization`,
+                            '@type': 'Organization',
+                            name: t.brand.name,
+                            logo: { '@type': 'ImageObject', url: `${appUrl}/images/brand/icon-512.png` },
+                        },
+                    },
+                ]}
+            />
 
             <article>
                 <header className="mx-auto flex max-w-3xl flex-col gap-4 px-4 pt-8 pb-8 sm:px-6 sm:pt-12">

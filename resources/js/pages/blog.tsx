@@ -1,11 +1,12 @@
 import PageHeader from '@/components/site/page-header';
 import PostCard from '@/components/site/post-card';
+import Seo from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { cn } from '@/lib/utils';
 import type { PostCard as PostCardData } from '@/types/blog';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Newspaper } from 'lucide-react';
 
 interface Props {
@@ -20,9 +21,7 @@ export default function Blog({ posts, pagination }: Props) {
 
     return (
         <SiteLayout>
-            <Head title={title}>
-                <meta name="description" content={t.blog.metaDescription} />
-            </Head>
+            <Seo title={title} description={t.blog.metaDescription} breadcrumbs={[{ name: t.nav.blog, path: url('/blog') }]} />
 
             <PageHeader title={t.blog.title} lead={t.blog.lead} crumbs={[{ label: t.nav.blog }]} />
 

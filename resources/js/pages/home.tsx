@@ -1,4 +1,5 @@
 import PostCard from '@/components/site/post-card';
+import Seo, { organizationLd, useAppUrl } from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,7 +7,7 @@ import { getServices } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import type { PostCard as PostCardData } from '@/types/blog';
-import { Head, Link, router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { ArrowRight, Search } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 
@@ -28,6 +29,7 @@ function DirArrow({ className = '' }: { className?: string }) {
 export default function Home({ posts = [] }: { posts?: PostCardData[] }) {
     const { t, url, digits, locale } = useI18n();
     const services = getServices(locale);
+    const appUrl = useAppUrl();
     const [code, setCode] = useState('');
 
     const submitTracking = (e: FormEvent) => {
@@ -37,7 +39,14 @@ export default function Home({ posts = [] }: { posts?: PostCardData[] }) {
 
     return (
         <SiteLayout>
-            <Head title={t.home.metaTitle} />
+            <Seo
+                title={t.home.metaTitle}
+                description={t.home.metaDescription}
+                jsonLd={[
+                    organizationLd(appUrl, locale, t.brand.name),
+                    { '@type': 'WebSite', '@id': `${appUrl}/#website`, url: appUrl, name: t.brand.name, inLanguage: locale },
+                ]}
+            />
 
             {/* Hero */}
             <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pt-10 pb-8 sm:px-6 sm:pt-16 lg:gap-8 lg:pt-20">

@@ -1,10 +1,11 @@
 import ContactCta from '@/components/site/contact-cta';
 import PageHeader from '@/components/site/page-header';
+import Seo from '@/components/site/seo';
 import ServiceIcon from '@/components/site/service-icon';
 import { getServices } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 
 export default function Services() {
@@ -13,9 +14,11 @@ export default function Services() {
 
     return (
         <SiteLayout>
-            <Head title={t.servicesPage.metaTitle}>
-                <meta name="description" content={t.servicesPage.metaDescription} />
-            </Head>
+            <Seo
+                title={t.servicesPage.metaTitle}
+                description={t.servicesPage.metaDescription}
+                breadcrumbs={[{ name: t.nav.services, path: url('/services') }]}
+            />
 
             <PageHeader title={t.servicesPage.title} lead={t.servicesPage.lead} crumbs={[{ label: t.nav.services }]} />
 

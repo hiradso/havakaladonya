@@ -13,7 +13,8 @@ const dictionaries: Record<Locale, Dictionary> = { fa, en };
  * Persian lives at "/", English at "/en".
  */
 export function useI18n() {
-    const { locale, alternateUrl } = usePage<SharedData & { alternateUrl?: string }>().props;
+    const page = usePage<SharedData & { alternateUrl?: string }>();
+    const { locale, alternateUrl } = page.props;
     const current: Locale = locale === 'en' ? 'en' : 'fa';
 
     return {
@@ -22,7 +23,7 @@ export function useI18n() {
         t: dictionaries[current],
         url: (path: string) => localizedUrl(path, current),
         // A page can say where its other-language version lives (e.g. an article → the other blog).
-        switchUrl: () => alternateUrl ?? switchLocaleUrl(current),
+        switchUrl: () => alternateUrl ?? switchLocaleUrl(current, page.url),
         /** Shows numbers with Persian digits on the Persian site (e.g. phone numbers, counts). */
         digits: (value: string | number) => localizeDigits(value, current),
     };
@@ -39,10 +40,11 @@ export function localizedUrl(path: string, locale: Locale): string {
 }
 
 /** URL of the current page in the other language. */
-export function switchLocaleUrl(current: Locale): string {
-    const path = typeof window === 'undefined' ? '/' : window.location.pathname;
+export function switchLocaleUrl(current: Locale, pageUrl: string): string {
+    // pageUrl is Inertia's page URL (path + query), the same on the server and in the browser.
+    const [path = '/', query] = pageUrl.split('?');
     // Keep the query string, e.g. ?code=… on the tracking page.
-    const search = typeof window === 'undefined' ? '' : window.location.search;
+    const search = query ? `?${query}` : '';
 
     if (current === 'en') {
         const withoutPrefix = path.replace(/^\/en(?=\/|$)/, '');

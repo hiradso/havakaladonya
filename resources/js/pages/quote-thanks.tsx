@@ -1,7 +1,8 @@
+import Seo from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { CircleCheck } from 'lucide-react';
 
 export default function QuoteThanks({ reference }: { reference: string | null }) {
@@ -10,7 +11,7 @@ export default function QuoteThanks({ reference }: { reference: string | null })
 
     return (
         <SiteLayout>
-            <Head title={q.thanksTitle} />
+            <Seo title={q.thanksTitle} description={t.footer.about} noindex />
             <section className="mx-auto flex max-w-xl flex-col items-center gap-6 px-4 py-20 text-center sm:py-28">
                 <CircleCheck className="size-16 text-emerald-500" aria-hidden="true" />
                 <h1 className="text-3xl font-black sm:text-4xl">{q.thanksTitle}</h1>

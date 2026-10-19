@@ -8,8 +8,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
-
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/images/brand/favicon-32.png" type="image/png" sizes="32x32">
         <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png">
@@ -45,6 +43,10 @@
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         @inertiaHead
+        {{-- With server-side rendering the page title comes from @inertiaHead; this is only the fallback. --}}
+        @if (empty($__inertiaSsrResponse))
+            <title inertia>{{ $locale === 'en' ? 'Hava Kala Donya' : 'هوا کالا دنیا' }}</title>
+        @endif
     </head>
     <body class="font-sans antialiased">
         @inertia

@@ -1,10 +1,11 @@
+import Seo from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type Locale, useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { cn } from '@/lib/utils';
-import { Head, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { CalendarClock, Check, CircleAlert, MapPin, Package, Phone, Plane, Search, Ship, TrainFront, Truck } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 
@@ -81,7 +82,11 @@ export default function Tracking({ code, shipment, notFound, tooMany }: Props) {
 
     return (
         <SiteLayout>
-            <Head title={shipment ? `${shipment.code} – ${t.tracking.metaTitle}` : t.tracking.metaTitle} />
+            <Seo
+                title={shipment ? `${shipment.code} – ${t.tracking.metaTitle}` : t.tracking.metaTitle}
+                description={t.tracking.metaDescription}
+                noindex={!!code}
+            />
 
             <section className="mx-auto flex max-w-3xl flex-col gap-5 px-4 pt-10 pb-6 sm:px-6 sm:pt-16">
                 <h1 className="text-3xl font-black sm:text-5xl">{t.tracking.title}</h1>

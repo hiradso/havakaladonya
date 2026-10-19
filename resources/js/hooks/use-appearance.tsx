@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 
 export type Appearance = 'light' | 'dark' | 'system';
 
-const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+// Everything that touches window/localStorage runs only in the browser (never during server-side rendering).
+const mediaQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
 
 const applyTheme = (appearance: Appearance) => {
-    const isDark = appearance === 'dark' || (appearance === 'system' && prefersDark());
+    const isDark = appearance === 'dark' || (appearance === 'system' && mediaQuery().matches);
 
     document.documentElement.classList.toggle('dark', isDark);
 };
-
-const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
 const handleSystemThemeChange = () => {
     const currentAppearance = localStorage.getItem('appearance') as Appearance;
@@ -18,12 +17,16 @@ const handleSystemThemeChange = () => {
 };
 
 export function initializeTheme() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
     const savedAppearance = (localStorage.getItem('appearance') as Appearance) || 'system';
 
     applyTheme(savedAppearance);
 
     // Add the event listener for system theme changes...
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    mediaQuery().addEventListener('change', handleSystemThemeChange);
 }
 
 export function useAppearance() {
@@ -39,7 +42,7 @@ export function useAppearance() {
         const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
         updateAppearance(savedAppearance || 'system');
 
-        return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+        return () => mediaQuery().removeEventListener('change', handleSystemThemeChange);
     }, []);
 
     return { appearance, updateAppearance };

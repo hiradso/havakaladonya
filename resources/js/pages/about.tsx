@@ -1,8 +1,8 @@
 import ContactCta from '@/components/site/contact-cta';
 import PageHeader from '@/components/site/page-header';
+import Seo, { organizationLd, useAppUrl } from '@/components/site/seo';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
-import { Head } from '@inertiajs/react';
 import { Clock, Handshake, Layers, Route } from 'lucide-react';
 
 const VALUE_ICONS = [Handshake, Route, Clock, Layers];
@@ -15,13 +15,18 @@ const TEAM = [
 ];
 
 export default function About() {
-    const { t, locale } = useI18n();
+    const { t, locale, url } = useI18n();
+    const appUrl = useAppUrl();
 
     return (
         <SiteLayout>
-            <Head title={t.about.metaTitle}>
-                <meta name="description" content={t.about.metaDescription} />
-            </Head>
+            <Seo
+                title={t.about.metaTitle}
+                description={t.about.metaDescription}
+                image="/images/photos/containers-yard-1600.webp"
+                breadcrumbs={[{ name: t.nav.about, path: url('/about') }]}
+                jsonLd={[organizationLd(appUrl, locale, t.brand.name)]}
+            />
 
             <PageHeader title={t.about.title} lead={t.about.lead} crumbs={[{ label: t.nav.about }]} />
 

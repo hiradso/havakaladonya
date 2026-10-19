@@ -1,5 +1,6 @@
 import InputError from '@/components/input-error';
 import PageHeader from '@/components/site/page-header';
+import Seo, { organizationLd, useAppUrl } from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,12 +8,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { CONTACT } from '@/lib/contact';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { ArrowRight, AtSign, CircleCheck, Instagram, Mail, MapPin, MessageCircle, Phone, Printer, Search, Smartphone } from 'lucide-react';
 import { type FormEvent, type ReactNode } from 'react';
 
 export default function Contact({ sent }: { sent?: boolean }) {
-    const { t, url, digits } = useI18n();
+    const { t, url, digits, locale } = useI18n();
+    const appUrl = useAppUrl();
     const c = t.contact;
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -34,9 +36,12 @@ export default function Contact({ sent }: { sent?: boolean }) {
 
     return (
         <SiteLayout>
-            <Head title={c.metaTitle}>
-                <meta name="description" content={c.metaDescription} />
-            </Head>
+            <Seo
+                title={c.metaTitle}
+                description={c.metaDescription}
+                breadcrumbs={[{ name: t.nav.contact, path: url('/contact') }]}
+                jsonLd={[organizationLd(appUrl, locale, t.brand.name)]}
+            />
 
             <PageHeader title={c.title} lead={c.lead} crumbs={[{ label: t.nav.contact }]} />
 

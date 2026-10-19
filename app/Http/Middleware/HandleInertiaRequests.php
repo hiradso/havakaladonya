@@ -42,6 +42,8 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             ...parent::share($request),
             'name' => config('app.name'),
+            // Absolute site address for canonical links, hreflang and share images (set APP_URL in .env).
+            'appUrl' => rtrim((string) config('app.url'), '/'),
             // Closures are resolved at render time, i.e. after the SetLocale route middleware ran.
             'locale' => fn () => app()->getLocale(),
             'direction' => fn () => app()->getLocale() === 'fa' ? 'rtl' : 'ltr',

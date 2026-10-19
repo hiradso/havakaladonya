@@ -1,11 +1,12 @@
 import PageHeader from '@/components/site/page-header';
+import Seo, { useAppUrl } from '@/components/site/seo';
 import ServiceIcon from '@/components/site/service-icon';
 import { Button } from '@/components/ui/button';
 import { getServices, SERVICE_PHOTOS, type ServiceSlug } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { CONTACT } from '@/lib/contact';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { Check, MessageCircle, Phone } from 'lucide-react';
 
 export default function ServicePage({ slug }: { slug: ServiceSlug }) {
@@ -14,13 +15,30 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
     const service = services.find((s) => s.slug === slug) ?? services[0];
     const others = services.filter((s) => s.slug !== service.slug);
     const photo = SERVICE_PHOTOS[service.slug];
+    const appUrl = useAppUrl();
     const quoteHref = url('/quote') + (service.quoteMode ? `?mode=${service.quoteMode}` : '');
 
     return (
         <SiteLayout>
-            <Head title={service.title}>
-                <meta name="description" content={service.lead} />
-            </Head>
+            <Seo
+                title={service.title}
+                description={service.lead}
+                image={photo ? `/images/photos/${photo}.webp` : null}
+                breadcrumbs={[
+                    { name: t.nav.services, path: url('/services') },
+                    { name: service.title, path: url(`/services/${service.slug}`) },
+                ]}
+                jsonLd={[
+                    {
+                        '@type': 'Service',
+                        name: service.title,
+                        description: service.lead,
+                        serviceType: service.title,
+                        provider: { '@id': `${appUrl}/#organization`, '@type': 'Organization', name: t.brand.name, url: appUrl },
+                        areaServed: ['IR', 'Europe', 'Central Asia', 'Russia', 'China', 'India'],
+                    },
+                ]}
+            />
 
             <PageHeader
                 title={service.title}
