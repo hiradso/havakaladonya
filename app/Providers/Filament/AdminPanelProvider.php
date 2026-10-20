@@ -14,6 +14,7 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Number;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -83,6 +84,34 @@ class AdminPanelProvider extends PanelProvider
                 .fi-ta-image:not(.fi-circular) img { border-radius: .5rem; object-fit: cover; }
                 .fi-ta-image.fi-circular img, .fi-user-avatar, .fi-avatar { border-radius: 9999px; }
             </style>')
+            // Persian digits in the panel: Filament formats page numbers and "showing 1 to 10 of 36"
+            // with Number::format (fa locale gives ۱۲۳); badges and "per page" options are plain text,
+            // so a small script converts those.
+            ->bootUsing(fn () => Number::useLocale('fa'))
+            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => <<<'HTML'
+                <script>
+                    (() => {
+                        const fa = (t) => t.replace(/[0-9]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
+                        const targets = '.fi-pagination option, .fi-badge, .fi-sidebar-item-badge-ctn, .fi-icon-btn-badge-ctn, .fi-tabs-item-badge';
+                        const convert = () => {
+                            document.querySelectorAll(targets).forEach((el) => {
+                                // Only number-only labels (counts, page sizes); never data like codes or emails.
+                                const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+                                for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+                                    if (/^\s*[0-9]+\s*$/.test(n.nodeValue)) n.nodeValue = fa(n.nodeValue);
+                                }
+                            });
+                        };
+                        let queued = false;
+                        new MutationObserver(() => {
+                            if (queued) return;
+                            queued = true;
+                            setTimeout(() => { queued = false; convert(); }, 30);
+                        }).observe(document.body, { childList: true, subtree: true, characterData: true });
+                        convert();
+                    })();
+                </script>
+                HTML)
             // Live chat: sound + notification for new visitor messages on every panel page.
             ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM) ? Blade::render('<livewire:chat-notifier />') : '');
     }
