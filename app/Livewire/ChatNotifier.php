@@ -24,6 +24,10 @@ class ChatNotifier extends Component
 
     public function check(): void
     {
+        if (! auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM)) {
+            return;
+        }
+
         ChatPresence::ping();
 
         $new = ChatMessage::with('conversation:id,name')

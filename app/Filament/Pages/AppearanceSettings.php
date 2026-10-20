@@ -20,6 +20,12 @@ use UnitEnum;
 
 class AppearanceSettings extends Page
 {
+    /** Settings are for the general manager only. */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedSwatch;
 
     protected static string | UnitEnum | null $navigationGroup = 'تنظیمات';

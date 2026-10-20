@@ -43,7 +43,7 @@ class QuoteRequestController extends Controller
 
         // A mail problem must never lose the customer's request.
         try {
-            Notification::send(User::where('is_admin', true)->get(), new NewQuoteRequest($quote->fresh()));
+            Notification::send(User::whereIn('role', \App\Support\Roles::CUSTOMER_TEAM)->get(), new NewQuoteRequest($quote->fresh()));
         } catch (Throwable $e) {
             Log::error('Quote notification failed', ['quote' => $quote->id, 'error' => $e->getMessage()]);
         }

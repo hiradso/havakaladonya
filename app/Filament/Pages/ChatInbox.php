@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\ChatConversation;
 use App\Support\ChatPresence;
+use App\Support\Roles;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Width;
@@ -37,6 +38,11 @@ class ChatInbox extends Page
 
     /** open | closed */
     public string $filter = 'open';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->hasRole(...Roles::CUSTOMER_TEAM) ?? false;
+    }
 
     public static function getNavigationBadge(): ?string
     {

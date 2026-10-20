@@ -5,12 +5,14 @@ namespace App\Filament\Resources\Shipments;
 use App\Filament\Resources\Shipments\Pages\CreateShipment;
 use App\Filament\Resources\Shipments\Pages\EditShipment;
 use App\Filament\Resources\Shipments\Pages\ListShipments;
+use App\Filament\Resources\Shipments\Pages\ViewShipment;
 use App\Filament\Resources\Shipments\RelationManagers\EventsRelationManager;
 use App\Models\QuoteRequest;
 use App\Models\Shipment;
 use App\Models\TrackingStage;
 use BackedEnum;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -126,6 +128,8 @@ class ShipmentResource extends Resource
             ])
             ->recordActions([
                 EditAction::make()->label('مدیریت'),
+                // Finance can open shipments read-only.
+                ViewAction::make()->hidden(fn (Shipment $record) => static::canEdit($record)),
             ]);
     }
 
@@ -141,6 +145,7 @@ class ShipmentResource extends Resource
         return [
             'index' => ListShipments::route('/'),
             'create' => CreateShipment::route('/create'),
+            'view' => ViewShipment::route('/{record}'),
             'edit' => EditShipment::route('/{record}/edit'),
         ];
     }

@@ -4,10 +4,12 @@ namespace App\Filament\Resources\QuoteRequests;
 
 use App\Filament\Resources\QuoteRequests\Pages\EditQuoteRequest;
 use App\Filament\Resources\QuoteRequests\Pages\ListQuoteRequests;
+use App\Filament\Resources\QuoteRequests\Pages\ViewQuoteRequest;
 use App\Models\QuoteRequest;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -70,7 +72,7 @@ class QuoteRequestResource extends Resource
                             ->native(false),
                         Select::make('assigned_to')
                             ->label('کارشناس مسئول')
-                            ->options(fn () => User::where('is_admin', true)->pluck('name', 'id'))
+                            ->options(fn () => User::whereIn('role', \App\Support\Roles::CUSTOMER_TEAM)->pluck('name', 'id'))
                             ->searchable()
                             ->preload()
                             ->native(false),
@@ -141,6 +143,8 @@ class QuoteRequestResource extends Resource
             ])
             ->recordActions([
                 EditAction::make()->label('بررسی'),
+                // Finance can open requests read-only.
+                ViewAction::make()->hidden(fn (QuoteRequest $record) => static::canEdit($record)),
             ]);
     }
 
@@ -148,6 +152,7 @@ class QuoteRequestResource extends Resource
     {
         return [
             'index' => ListQuoteRequests::route('/'),
+            'view' => ViewQuoteRequest::route('/{record}'),
             'edit' => EditQuoteRequest::route('/{record}/edit'),
         ];
     }

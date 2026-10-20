@@ -32,7 +32,7 @@ class ContactController extends Controller
 
         // A mail problem must never lose the customer's message.
         try {
-            Notification::send(User::where('is_admin', true)->get(), new NewContactMessage($message));
+            Notification::send(User::whereIn('role', \App\Support\Roles::CUSTOMER_TEAM)->get(), new NewContactMessage($message));
         } catch (Throwable $e) {
             Log::error('Contact notification failed', ['message' => $message->id, 'error' => $e->getMessage()]);
         }

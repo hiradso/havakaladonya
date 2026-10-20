@@ -76,6 +76,6 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             // Live chat: sound + notification for new visitor messages on every panel page.
-            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->check() ? Blade::render('<livewire:chat-notifier />') : '');
+            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM) ? Blade::render('<livewire:chat-notifier />') : '');
     }
 }

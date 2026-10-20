@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
+use App\Support\Roles;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,8 +18,8 @@ class User extends Authenticatable implements FilamentUser
     /**
      * The attributes that are mass assignable.
      *
-     * `is_admin` is deliberately NOT here, so a visitor can never make
-     * themselves an admin through a registration or profile form.
+     * `role` (and the old `is_admin`) are deliberately NOT here, so a visitor can never
+     * give themselves panel access through a registration or profile form.
      *
      * @var list<string>
      */
@@ -52,12 +53,24 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    /**
-     * Only staff marked as admin may open the /admin panel.
-     * (Detailed roles — sales/operations, finance, writer — come later.)
-     */
+    /** Only staff (users with a role) may open the /admin panel. */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->is_admin;
+        return array_key_exists((string) $this->role, Roles::LABELS);
+    }
+
+    public function hasRole(string ...$roles): bool
+    {
+        return in_array($this->role, $roles, true);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Roles::ADMIN;
+    }
+
+    public function roleLabel(): string
+    {
+        return Roles::LABELS[$this->role] ?? '—';
     }
 }
