@@ -85,6 +85,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
         $gender = $this->gender === Gender::FEMALE ? Gender::FEMALE : Gender::MALE;
 
-        return asset("images/avatars/{$this->role}-{$gender}.svg");
+        return asset("images/avatars/{$this->role}-{$gender}.svg?v=2");
     }
 }
