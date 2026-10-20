@@ -21,7 +21,8 @@ interface SeoProps {
     jsonLd?: JsonLd[];
 }
 
-const DEFAULT_IMAGE = '/images/photos/port-plane-1600.webp';
+/** Branded 1200×630 share image (public/images/og), per language. */
+const defaultImage = (locale: 'fa' | 'en') => `/images/og/og-default-${locale}.jpg`;
 
 /**
  * Everything search engines and link previews read from <head>:
@@ -42,7 +43,7 @@ export default function Seo({ title, description, image, type = 'website', noind
     const faPath = path.replace(/^\/en(?=\/|$)/, '') || '/';
     const enPath = faPath === '/' ? '/en' : `/en${faPath}`;
     const siteName = t.brand.name;
-    const shareImage = abs(image ?? DEFAULT_IMAGE);
+    const shareImage = abs(image ?? defaultImage(locale));
 
     const graph: JsonLd[] = [...jsonLd];
     if (breadcrumbs?.length) {
