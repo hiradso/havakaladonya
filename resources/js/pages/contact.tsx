@@ -9,7 +9,7 @@ import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { CONTACT } from '@/lib/contact';
 import { Link, useForm } from '@inertiajs/react';
-import { ArrowRight, AtSign, CircleCheck, Instagram, Mail, MapPin, MessageCircle, Phone, Printer, Search, Smartphone } from 'lucide-react';
+import { ArrowRight, AtSign, Camera, CircleCheck, Mail, MapPin, MessageCircle, Phone, Printer, Search, Smartphone } from 'lucide-react';
 import { type FormEvent, type ReactNode } from 'react';
 
 export default function Contact({ sent }: { sent?: boolean }) {
@@ -61,7 +61,7 @@ export default function Contact({ sent }: { sent?: boolean }) {
                         <Method icon={<Mail />} label={c.email} href={`mailto:${CONTACT.email}`}>
                             <span dir="ltr">{CONTACT.email}</span>
                         </Method>
-                        <Method icon={<Instagram />} label={c.instagram} href={CONTACT.instagram.href} external>
+                        <Method icon={<Camera />} label={c.instagram} href={CONTACT.instagram.href} external>
                             <span dir="ltr" className="inline-flex items-center gap-0.5">
                                 <AtSign className="size-4" aria-hidden="true" />
                                 {CONTACT.instagram.handle}

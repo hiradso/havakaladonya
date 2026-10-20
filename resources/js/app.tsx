@@ -3,6 +3,7 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { DirectionProvider } from '@radix-ui/react-direction';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import type { ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
 import { initializeTheme } from './hooks/use-appearance';
@@ -15,7 +16,7 @@ const siteName = () => (document.documentElement.lang === 'en' ? 'Hava Kala Dony
 
 createInertiaApp({
     title: (title) => (title ? `${title} | ${siteName()}` : siteName()),
-    resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
+    resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob<ComponentType>('./pages/**/*.tsx', { import: 'default' })),
     setup({ el, App, props }) {
         const root = createRoot(el);
         const dir = props.initialPage.props.direction === 'ltr' ? 'ltr' : 'rtl';

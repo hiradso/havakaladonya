@@ -10,13 +10,26 @@ export default function PostCard({ post, headingLevel = 'h2' }: { post: PostCard
 
     return (
         <article className="group bg-card hover:border-primary relative flex h-full flex-col overflow-hidden rounded-2xl border transition-colors">
-            {post.cover ? (
-                <img src={post.cover} alt="" loading="lazy" width={800} height={450} className="bg-muted aspect-[16/9] w-full object-cover" />
-            ) : (
-                <div className="bg-secondary text-muted-foreground flex aspect-[16/9] w-full items-center justify-center" aria-hidden="true">
-                    <Newspaper className="size-10" strokeWidth={1.25} />
-                </div>
-            )}
+            {/* Inset image with its own rounded corners on all four sides */}
+            <div className="p-2 pb-0">
+                {post.cover ? (
+                    <img
+                        src={post.cover}
+                        alt=""
+                        loading="lazy"
+                        width={800}
+                        height={450}
+                        className="bg-muted aspect-[16/9] w-full rounded-xl object-cover"
+                    />
+                ) : (
+                    <div
+                        className="bg-secondary text-muted-foreground flex aspect-[16/9] w-full items-center justify-center rounded-xl"
+                        aria-hidden="true"
+                    >
+                        <Newspaper className="size-10" strokeWidth={1.25} />
+                    </div>
+                )}
+            </div>
             <div className="flex flex-1 flex-col gap-3 p-5">
                 <Heading className="text-lg leading-8 font-black">
                     {/* The whole card is clickable through this link's ::after */}

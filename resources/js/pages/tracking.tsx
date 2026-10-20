@@ -66,7 +66,7 @@ function formatDate(ymd: string, locale: Locale) {
 }
 
 export default function Tracking({ code, shipment, notFound, tooMany }: Props) {
-    const { t, url, locale } = useI18n();
+    const { t, url } = useI18n();
     const [value, setValue] = useState(code ?? '');
     const [loading, setLoading] = useState(false);
 

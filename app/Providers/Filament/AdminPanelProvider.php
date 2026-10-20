@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Blade;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
@@ -68,7 +68,7 @@ class AdminPanelProvider extends PanelProvider
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
+                PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
@@ -76,6 +76,12 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            // Rounded corners for every picture in the panel: table thumbnails, upload previews, editor images.
+            ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => '<style>
+                .fi-ta-image img, .fi-in-image img, .fi-fo-file-upload .filepond--image-preview-wrapper,
+                .fi-fo-file-upload .filepond--item-panel, .fi-fo-rich-editor img, .fi-prose img { border-radius: .75rem; }
+                .fi-ta-image img { border-radius: .5rem; object-fit: cover; }
+            </style>')
             // Live chat: sound + notification for new visitor messages on every panel page.
             ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM) ? Blade::render('<livewire:chat-notifier />') : '');
     }

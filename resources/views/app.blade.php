@@ -45,7 +45,7 @@
         @inertiaHead
         {{-- With server-side rendering the page title comes from @inertiaHead; this is only the fallback. --}}
         @if (empty($__inertiaSsrResponse))
-            <title inertia>{{ $locale === 'en' ? 'Hava Kala Donya' : 'هوا کالا دنیا' }}</title>
+            <title data-inertia>{{ $locale === 'en' ? 'Hava Kala Donya' : 'هوا کالا دنیا' }}</title>
         @endif
     </head>
     <body class="font-sans antialiased">

@@ -135,7 +135,7 @@ class PostResource extends Resource
         return $table
             ->defaultSort('published_at', 'desc')
             ->columns([
-                ImageColumn::make('cover_path')->label('')->disk('public')->imageWidth(72)->imageHeight(40)->extraImgAttributes(['class' => 'rounded object-cover']),
+                ImageColumn::make('cover_path')->label('')->disk('public')->imageWidth(72)->imageHeight(40),
                 TextColumn::make('title')->label('عنوان')->searchable()->weight('bold')->wrap()->limit(70),
                 TextColumn::make('locale')->label('زبان')->badge()
                     ->formatStateUsing(fn (string $state) => $state === 'en' ? 'EN' : 'فا')

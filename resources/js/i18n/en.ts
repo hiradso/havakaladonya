@@ -25,7 +25,8 @@ const en: typeof fa = {
     },
     home: {
         metaTitle: 'International freight, customs clearance and procurement',
-        metaDescription: 'Hava Kala Donya: air, sea, road and rail freight from Iran to Europe, Russia, Central Asia, China and India, with customs clearance, procurement and online shipment tracking.',
+        metaDescription:
+            'Hava Kala Donya: air, sea, road and rail freight from Iran to Europe, Russia, Central Asia, China and India, with customs clearance, procurement and online shipment tracking.',
         heroTitleA: 'From any origin,',
         heroTitleB: 'to any destination.',
         heroText: 'Air, sea, road and rail freight together with procurement and customs clearance — with online tracking for every shipment.',
@@ -56,7 +57,8 @@ const en: typeof fa = {
     },
     quote: {
         metaTitle: 'Request a freight quote',
-        metaDescription: 'Request a quote for air, sea, road or rail freight. Send your cargo and route details and the Hava Kala Donya team will contact you.',
+        metaDescription:
+            'Request a quote for air, sea, road or rail freight. Send your cargo and route details and the Hava Kala Donya team will contact you.',
         title: 'Request a freight quote',
         intro: 'Tell us about your cargo and route. Our team will contact you during business hours with a price.',
         required: 'required',
@@ -144,7 +146,8 @@ const en: typeof fa = {
     },
     about: {
         metaTitle: 'About Hava Kala Donya',
-        metaDescription: 'Hava Kala Donya is an international freight company registered in 2012, built on experience in trade and air cargo going back to 1986.',
+        metaDescription:
+            'Hava Kala Donya is an international freight company registered in 2012, built on experience in trade and air cargo going back to 1986.',
         title: 'About Hava Kala Donya',
         lead: 'An international freight company registered in 2012, built on experience in trade and air cargo going back to 1986.',
         storyTitle: 'Our story',
@@ -162,7 +165,10 @@ const en: typeof fa = {
         valuesTitle: 'What makes us different',
         values: [
             { title: 'Honest work', text: 'Real prices and real timelines from the start — the trust of customers and partners comes first.' },
-            { title: 'One team, end to end', text: 'Transport, clearance and delivery are followed by one team, so you don’t juggle several companies.' },
+            {
+                title: 'One team, end to end',
+                text: 'Transport, clearance and delivery are followed by one team, so you don’t juggle several companies.',
+            },
             { title: 'Modern ways of working', text: 'From online shipment tracking to step-by-step updates, you always know where your cargo is.' },
             { title: 'Every transport mode', text: 'Air, sea, road and rail — and combinations of them wherever that saves money.' },
         ],

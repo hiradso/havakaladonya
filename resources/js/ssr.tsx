@@ -2,6 +2,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import createServer from '@inertiajs/react/server';
 import { DirectionProvider } from '@radix-ui/react-direction';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import type { ComponentType } from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 /**
@@ -10,23 +11,14 @@ import ReactDOMServer from 'react-dom/server';
  * If the SSR server is not running, Laravel falls back to normal browser rendering.
  */
 
-// Account pages (login, settings, dashboard) are not for search engines; they render in the browser only.
-const CLIENT_ONLY = /^(auth\/|settings\/|dashboard$|welcome$)/;
-
-const escapeAttr = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/</g, '&lt;');
-
 createServer((page) => {
-    if (CLIENT_ONLY.test(page.component)) {
-        return Promise.resolve({ head: [], body: `<div id="app" data-page="${escapeAttr(JSON.stringify(page))}"></div>` });
-    }
-
     const siteName = page.props.locale === 'en' ? 'Hava Kala Donya' : 'هوا کالا دنیا';
 
     return createInertiaApp({
         page,
         render: ReactDOMServer.renderToString,
         title: (title) => (title ? `${title} | ${siteName}` : siteName),
-        resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
+        resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob<ComponentType>('./pages/**/*.tsx', { import: 'default' })),
         setup: ({ App, props }) => (
             <DirectionProvider dir={page.props.direction === 'ltr' ? 'ltr' : 'rtl'}>
                 <App {...props} />

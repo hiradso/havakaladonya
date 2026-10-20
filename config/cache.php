@@ -105,4 +105,16 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | No PHP classes are unserialized from the cache (Laravel 13 default).
+    | This site only caches arrays and numbers.
+    |
+    */
+
+    'serializable_classes' => false,
+
 ];
