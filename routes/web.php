@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuoteRequestController;
@@ -20,7 +21,7 @@ $publicPages = function (string $locale) {
     // Quote request form
     Route::get('quote', [QuoteRequestController::class, 'create'])->name("{$locale}.quote");
     Route::post('quote', [QuoteRequestController::class, 'store'])
-        ->middleware('throttle:5,10') // max 5 requests per 10 minutes per visitor
+        ->middleware('throttle:quote') // max 5 requests per 10 minutes per visitor
         ->name("{$locale}.quote.store");
     Route::get('quote/thanks', [QuoteRequestController::class, 'thanks'])->name("{$locale}.quote.thanks");
 
@@ -33,7 +34,7 @@ $publicPages = function (string $locale) {
     Route::get('about', [PageController::class, 'about'])->name("{$locale}.about");
     Route::get('contact', [ContactController::class, 'show'])->name("{$locale}.contact");
     Route::post('contact', [ContactController::class, 'store'])
-        ->middleware('throttle:5,10') // max 5 messages per 10 minutes per visitor
+        ->middleware('throttle:contact') // max 5 messages per 10 minutes per visitor
         ->name("{$locale}.contact.store");
 
     // Blog (Persian article addresses keep their Persian letters)
@@ -43,6 +44,14 @@ $publicPages = function (string $locale) {
 
 Route::middleware('locale:fa')->group(fn () => $publicPages('fa'));
 Route::prefix('en')->middleware('locale:en')->group(fn () => $publicPages('en'));
+
+// Live chat (JSON for the chat widget; the visitor's browser keeps a random token)
+Route::prefix('chat')->group(function () {
+    Route::get('status', [ChatController::class, 'status'])->middleware('throttle:chat-poll');
+    Route::post('start', [ChatController::class, 'start'])->middleware('throttle:chat-start');
+    Route::get('{token}', [ChatController::class, 'show'])->middleware('throttle:chat-poll');
+    Route::post('{token}/messages', [ChatController::class, 'send'])->middleware('throttle:chat-send');
+});
 
 // List of all pages for search engines
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
