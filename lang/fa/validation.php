@@ -23,5 +23,13 @@ return [
     'string' => ':attribute باید متن باشد.',
     'uploaded' => 'بارگذاری :attribute انجام نشد.',
 
+    'password' => [
+        'letters' => ':attribute باید حداقل یک حرف داشته باشد.',
+        'mixed' => ':attribute باید حداقل یک حرف بزرگ و یک حرف کوچک انگلیسی داشته باشد.',
+        'numbers' => ':attribute باید حداقل یک عدد داشته باشد.',
+        'symbols' => ':attribute باید حداقل یک نماد (مثل ! یا @) داشته باشد.',
+        'uncompromised' => 'این :attribute در نشت‌های اطلاعاتی دیده شده است؛ رمز دیگری انتخاب کنید.',
+    ],
+
     'attributes' => [],
 ];

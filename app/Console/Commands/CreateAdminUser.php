@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
+use App\Support\Gender;
+use App\Support\PasswordPolicy;
 use App\Support\Roles;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Creates (or updates) a full-access admin of the /admin panel:
@@ -14,7 +17,7 @@ use Illuminate\Console\Command;
  */
 class CreateAdminUser extends Command
 {
-    protected $signature = 'user:admin {email} {--name= : Display name}';
+    protected $signature = 'user:admin {email} {--name= : Display name} {--female : Use the female avatar}';
 
     protected $description = 'Create or update a full-access admin user';
 
@@ -28,9 +31,12 @@ class CreateAdminUser extends Command
             return self::FAILURE;
         }
 
-        $password = (string) $this->secret('Password (min 8 characters)');
-        if (mb_strlen($password) < 8) {
-            $this->error('Password is too short.');
+        $password = (string) $this->secret('Password (8+ characters, upper and lower case letters and a number)');
+        $validator = Validator::make(['password' => $password], ['password' => ['required', PasswordPolicy::rule()]]);
+        if ($validator->fails()) {
+            foreach ($validator->errors()->all() as $error) {
+                $this->error($error);
+            }
 
             return self::FAILURE;
         }
@@ -40,6 +46,7 @@ class CreateAdminUser extends Command
             'name' => $this->option('name') ?: ($user->name ?: strstr($email, '@', true)),
             'password' => $password,
             'role' => Roles::ADMIN,
+            'gender' => $this->option('female') ? Gender::FEMALE : ($user->gender ?? Gender::MALE),
             'email_verified_at' => $user->email_verified_at ?? now(),
         ])->save();
 

@@ -6,6 +6,8 @@ use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
+use App\Support\Gender;
+use App\Support\PasswordPolicy;
 use App\Support\Roles;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
@@ -14,8 +16,10 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -66,16 +70,24 @@ class UserResource extends Resource
                     ->disabled(fn (?User $record) => $record?->is(auth()->user()))
                     ->dehydrated(fn (?User $record) => ! $record?->is(auth()->user()))
                     ->helperText(fn (?User $record) => $record?->is(auth()->user()) ? 'نقش خودتان را نمی‌توانید تغییر دهید.' : null),
+                Select::make('gender')
+                    ->label('جنسیت')
+                    ->helperText('برای انتخاب تصویر پروفایل (آواتار) در پنل.')
+                    ->options(Gender::LABELS)
+                    ->required()
+                    ->native(false),
                 TextInput::make('password')
                     ->label('رمز عبور')
                     ->password()
                     ->revealable()
-                    ->minLength(8)
+                    ->rule(PasswordPolicy::rule())
                     ->maxLength(100)
+                    ->autocomplete('new-password')
+                    // Live strength bar + checklist (helperText would replace it, so the edit hint lives in the view).
+                    ->belowContent(fn (string $operation) => View::make('filament.forms.password-strength')->viewData(['editing' => $operation === 'edit']))
                     // Required for new users; on edit, empty means "keep the current password".
                     ->required(fn (string $operation) => $operation === 'create')
-                    ->dehydrated(fn (?string $state) => filled($state))
-                    ->helperText(fn (string $operation) => $operation === 'edit' ? 'برای تغییر رمز پر کنید؛ خالی بماند رمز قبلی می‌ماند.' : 'حداقل ۸ حرف.'),
+                    ->dehydrated(fn (?string $state) => filled($state)),
             ])->columns(['default' => 1, 'md' => 2]),
         ])->columns(1);
     }
@@ -85,6 +97,11 @@ class UserResource extends Resource
         return $table
             ->defaultSort('name')
             ->columns([
+                ImageColumn::make('avatar')
+                    ->label('')
+                    ->state(fn (User $record) => $record->getFilamentAvatarUrl())
+                    ->circular()
+                    ->imageSize(36),
                 TextColumn::make('name')->label('نام')->searchable()->weight('bold'),
                 TextColumn::make('email')->label('ایمیل')->searchable(),
                 TextColumn::make('role')->label('نقش')->badge()

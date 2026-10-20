@@ -78,9 +78,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             // Rounded corners for every picture in the panel: table thumbnails, upload previews, editor images.
             ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => '<style>
-                .fi-ta-image img, .fi-in-image img, .fi-fo-file-upload .filepond--image-preview-wrapper,
+                .fi-ta-image:not(.fi-circular) img, .fi-in-image img, .fi-fo-file-upload .filepond--image-preview-wrapper,
                 .fi-fo-file-upload .filepond--item-panel, .fi-fo-rich-editor img, .fi-prose img { border-radius: .75rem; }
-                .fi-ta-image img { border-radius: .5rem; object-fit: cover; }
+                .fi-ta-image:not(.fi-circular) img { border-radius: .5rem; object-fit: cover; }
+                .fi-ta-image.fi-circular img, .fi-user-avatar, .fi-avatar { border-radius: 9999px; }
             </style>')
             // Live chat: sound + notification for new visitor messages on every panel page.
             ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM) ? Blade::render('<livewire:chat-notifier />') : '');

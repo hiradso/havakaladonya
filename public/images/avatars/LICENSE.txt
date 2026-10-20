@@ -1,0 +1,3 @@
+Avatars generated with DiceBear (https://www.dicebear.com), style "Avataaars" by Pablo Stanley
+(https://avataaars.com) — free for personal and commercial use.
+File names: {role}-{gender}.svg (roles: admin, sales_ops, finance, writer; gender: male, female).

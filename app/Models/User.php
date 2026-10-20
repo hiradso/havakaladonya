@@ -3,14 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Filament\Models\Contracts\FilamentUser;
+use App\Support\Gender;
 use App\Support\Roles;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -72,5 +74,17 @@ class User extends Authenticatable implements FilamentUser
     public function roleLabel(): string
     {
         return Roles::LABELS[$this->role] ?? '—';
+    }
+
+    /** Avatar of the panel by role and gender (public/images/avatars/{role}-{gender}.svg). */
+    public function getFilamentAvatarUrl(): ?string
+    {
+        if (! array_key_exists((string) $this->role, Roles::LABELS)) {
+            return null;
+        }
+
+        $gender = $this->gender === Gender::FEMALE ? Gender::FEMALE : Gender::MALE;
+
+        return asset("images/avatars/{$this->role}-{$gender}.svg");
     }
 }
