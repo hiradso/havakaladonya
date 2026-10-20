@@ -5,11 +5,12 @@ namespace App\Notifications;
 use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Models\ContactMessage;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class NewContactMessage extends Notification
+class NewContactMessage extends Notification implements ShouldQueue
 {
     use Queueable;
 

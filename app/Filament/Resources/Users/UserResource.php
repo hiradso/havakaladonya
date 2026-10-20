@@ -95,7 +95,7 @@ class UserResource extends Resource
                         Roles::FINANCE => 'success',
                         default => 'gray',
                     }),
-                TextColumn::make('created_at')->label('ایجاد')->date('Y/m/d')->sortable()->toggleable(),
+                TextColumn::make('created_at')->label('ایجاد')->jalali()->sortable()->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('role')->label('نقش')->options(Roles::LABELS),

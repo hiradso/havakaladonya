@@ -58,7 +58,7 @@ class EventsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('stage.name_fa')->label('مرحله')->badge()
                     ->color(fn ($record) => $record->stage?->is_final ? 'success' : 'info'),
-                TextColumn::make('happened_at')->label('زمان')->dateTime('Y/m/d H:i')->sortable(),
+                TextColumn::make('happened_at')->label('زمان')->jalali(withTime: true)->sortable(),
                 TextColumn::make('location')->label('مکان')->placeholder('—'),
                 TextColumn::make('note')->label('توضیح')->limit(60)->wrap()->placeholder('—'),
                 TextColumn::make('author.name')->label('ثبت توسط')->toggleable(isToggledHiddenByDefault: true),

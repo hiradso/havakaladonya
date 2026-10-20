@@ -56,17 +56,13 @@ Route::prefix('chat')->group(function () {
 // List of all pages for search engines
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
-// Starter-kit routes kept for now (customer accounts come in phase 2).
 Route::get('/home', fn () => redirect('/'))->name('home');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-});
-
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+// The starter kit's public sign-up, login, dashboard and profile pages are switched off:
+// staff use /admin, and customer accounts come with the customer panel (phase 2).
+// To bring them back, re-enable these two lines:
+// require __DIR__.'/settings.php';
+// require __DIR__.'/auth.php';
 
 // Old WordPress addresses (e.g. /حمل-و-نقل-هوایی/) → new pages with a permanent redirect.
 Route::fallback([PageController::class, 'legacy'])->middleware('locale:fa');

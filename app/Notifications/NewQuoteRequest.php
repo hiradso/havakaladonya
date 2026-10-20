@@ -5,10 +5,11 @@ namespace App\Notifications;
 use App\Filament\Resources\QuoteRequests\QuoteRequestResource;
 use App\Models\QuoteRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewQuoteRequest extends Notification
+class NewQuoteRequest extends Notification implements ShouldQueue
 {
     use Queueable;
 

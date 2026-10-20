@@ -143,7 +143,7 @@ class PostResource extends Resource
                 TextColumn::make('status')->label('وضعیت')->badge()
                     ->formatStateUsing(fn (string $state) => Post::STATUSES[$state] ?? $state)
                     ->color(fn (string $state) => $state === 'published' ? 'success' : 'warning'),
-                TextColumn::make('published_at')->label('تاریخ انتشار')->date('Y/m/d')->sortable()->placeholder('—'),
+                TextColumn::make('published_at')->label('تاریخ انتشار')->jalali()->sortable()->placeholder('—'),
             ])
             ->filters([
                 SelectFilter::make('locale')->label('زبان')->options(Post::LOCALES),

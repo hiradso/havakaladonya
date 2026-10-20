@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->passwordReset()
             ->brandName('هوا کالا دنیا')
             ->brandLogo(asset('images/brand/logo-full.webp'))
             // The full logo's blue text is hard to read on a dark background, so dark mode shows the mark only.
