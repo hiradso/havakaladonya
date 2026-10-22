@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
+import PageLoader from './components/site/page-loader';
 import { initializeTheme } from './hooks/use-appearance';
 
 declare global {
@@ -25,12 +26,13 @@ createInertiaApp({
         root.render(
             <DirectionProvider dir={dir}>
                 <App {...props} />
+                {/* Frosted loader shown while moving between pages (client only, not in SSR HTML). */}
+                <PageLoader />
             </DirectionProvider>,
         );
     },
-    progress: {
-        color: '#FFB020',
-    },
+    // The thin top bar is replaced by <PageLoader />.
+    progress: false,
 });
 
 // This will set light / dark mode on load...

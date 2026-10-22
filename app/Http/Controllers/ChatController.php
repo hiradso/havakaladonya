@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChatConversation;
+use App\Support\ChatAlerts;
 use App\Support\ChatPresence;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -45,6 +46,7 @@ class ChatController extends Controller
             'ip_address' => $request->ip(),
         ]);
         $conversation->addMessage('visitor', trim($data['message']));
+        ChatAlerts::visitorWrote($conversation, trim($data['message']), isNew: true);
 
         return response()->json([
             'token' => $conversation->token,
@@ -73,6 +75,7 @@ class ChatController extends Controller
         $data = $request->validate(['body' => ['required', 'string', 'max:2000']]);
 
         $message = $conversation->addMessage('visitor', trim($data['body']));
+        ChatAlerts::visitorWrote($conversation, trim($data['body']), isNew: false);
 
         return response()->json(['message' => $message->toPublic()], 201);
     }
