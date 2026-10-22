@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
 /** Show the loader only when a page change takes longer than this (fast pages never flash it). */
-const SHOW_DELAY = 250;
+const SHOW_DELAY = 150;
 /** Once visible, keep it at least this long so it never blinks. */
 const MIN_VISIBLE = 450;
 
