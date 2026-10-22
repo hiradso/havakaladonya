@@ -31,6 +31,8 @@
         {{-- Apply dark mode before the page paints, to avoid a white flash --}}
         <script>
             (function () {
+                // Lets CSS know JavaScript is on (images fade in only then; without JS they show normally).
+                document.documentElement.classList.add('hkd-js');
                 try {
                     var appearance = localStorage.getItem('appearance') || 'system';
                     var dark = appearance === 'dark' || (appearance === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -51,5 +53,30 @@
     <body class="font-sans antialiased">
         @include('partials.boot-loader')
         @inertia
+
+        {{-- Smooth images: content images stay invisible until fully downloaded, then fade in,
+             instead of being drawn strip by strip on slow connections (styles in app.css). --}}
+        <script>
+            (function () {
+                function done(img) { img.setAttribute('data-loaded', ''); }
+                function onEvent(e) { if (e.target && e.target.tagName === 'IMG') done(e.target); }
+                // Capture phase: load/error events don't bubble, but they can be caught on the way down.
+                document.addEventListener('load', onEvent, true);
+                document.addEventListener('error', onEvent, true);
+                var queued = false;
+                function scan() {
+                    queued = false;
+                    var imgs = document.querySelectorAll('main img:not([data-loaded])');
+                    for (var i = 0; i < imgs.length; i++) {
+                        if (imgs[i].complete) done(imgs[i]);
+                    }
+                }
+                scan();
+                // New pages (Inertia) add new images; cached ones may already be complete.
+                new MutationObserver(function () {
+                    if (!queued) { queued = true; requestAnimationFrame(scan); }
+                }).observe(document.body, { childList: true, subtree: true });
+            })();
+        </script>
     </body>
 </html>

@@ -166,7 +166,7 @@ export default function Home({ posts = [] }: { posts?: PostCardData[] }) {
                                 href={url(`/services/${service.slug}`)}
                                 className="group grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-3 gap-y-1 border-t py-5 sm:grid-cols-[3rem_minmax(0,16rem)_1fr_auto] sm:gap-x-6 sm:py-6"
                             >
-                                <span className="text-primary-text text-sm font-bold tabular-nums">{digits(String(i + 1).padStart(2, '0'))}</span>
+                                <span className="text-primary-text text-sm font-bold tabular-nums">{digits(i + 1)}</span>
                                 <strong className="text-xl font-black sm:text-2xl">{service.title}</strong>
                                 <span className="text-muted-foreground col-start-2 row-start-2 text-sm leading-7 sm:col-start-3 sm:row-start-1 sm:text-base">
                                     {service.short}

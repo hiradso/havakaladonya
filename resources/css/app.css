@@ -463,3 +463,39 @@
         transition: none;
     }
 }
+
+/* ───────────── Smooth image loading (script in app.blade.php) ─────────────
+   While an image downloads, its box shows a soft shimmering placeholder instead of the picture
+   being drawn strip by strip; once fully downloaded it fades in. Only when JavaScript is on. */
+.hkd-js main img:not([data-loaded]) {
+    /* Pushes the half-loaded pixels out of the box; the box itself (size, rounded corners) stays. */
+    object-position: -99999px -99999px;
+    background: linear-gradient(100deg, transparent 30%, color-mix(in oklab, var(--foreground) 6%, transparent) 50%, transparent 70%) var(--muted);
+    background-size: 200% 100%;
+    animation: hkd-img-shimmer 1.4s linear infinite;
+}
+.hkd-js main img[data-loaded] {
+    animation: hkd-img-in 0.5s ease both;
+}
+@keyframes hkd-img-shimmer {
+    from {
+        background-position: 150% 0;
+    }
+    to {
+        background-position: -50% 0;
+    }
+}
+@keyframes hkd-img-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hkd-js main img:not([data-loaded]),
+    .hkd-js main img[data-loaded] {
+        animation: none;
+    }
+}
