@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\SiteContent;
 use App\Support\Theme;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -53,6 +54,8 @@ class HandleInertiaRequests extends Middleware
                 'secondary' => Theme::secondary(),
                 'secondaryForeground' => Theme::secondaryForeground(),
             ],
+            // Texts, pictures and contact details edited in the panel (admin → Site content).
+            'site' => fn () => SiteContent::forFrontend(app()->getLocale()),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),

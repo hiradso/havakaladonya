@@ -1,5 +1,6 @@
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
 import en from './en';
 import fa from './fa';
 
@@ -14,19 +15,42 @@ const dictionaries: Record<Locale, Dictionary> = { fa, en };
  */
 export function useI18n() {
     const page = usePage<SharedData & { alternateUrl?: string }>();
-    const { locale, alternateUrl } = page.props;
+    const { locale, alternateUrl, site } = page.props;
     const current: Locale = locale === 'en' ? 'en' : 'fa';
+    const overrides = site?.texts;
+    // Texts edited in the admin panel are laid over the built-in dictionary.
+    const t = useMemo(() => withOverrides(dictionaries[current], overrides), [current, overrides]);
 
     return {
         locale: current,
         dir: current === 'fa' ? ('rtl' as const) : ('ltr' as const),
-        t: dictionaries[current],
+        t,
         url: (path: string) => localizedUrl(path, current),
         // A page can say where its other-language version lives (e.g. an article → the other blog).
         switchUrl: () => alternateUrl ?? switchLocaleUrl(current, page.url),
         /** Shows numbers with Persian digits on the Persian site (e.g. phone numbers, counts). */
         digits: (value: string | number) => localizeDigits(value, current),
     };
+}
+
+/** Deep merge for plain objects; arrays and strings from the panel replace the built-in value. */
+function withOverrides<T>(base: T, overrides: unknown): T {
+    if (!overrides || typeof overrides !== 'object' || Array.isArray(overrides) || typeof base !== 'object' || base === null) {
+        return base;
+    }
+    const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+    for (const [key, value] of Object.entries(overrides as Record<string, unknown>)) {
+        const current = out[key];
+        if (value === null || value === undefined) {
+            continue;
+        }
+        if (typeof value === 'object' && !Array.isArray(value) && current && typeof current === 'object' && !Array.isArray(current)) {
+            out[key] = withOverrides(current, value);
+        } else if (Array.isArray(value) ? value.length > 0 : typeof value === typeof current || current === undefined) {
+            out[key] = value;
+        }
+    }
+    return out as T;
 }
 
 export function localizedUrl(path: string, locale: Locale): string {

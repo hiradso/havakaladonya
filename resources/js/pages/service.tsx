@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { getServices, SERVICE_PHOTOS, type ServiceSlug } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
-import { CONTACT } from '@/lib/contact';
+import { useContact } from '@/lib/contact';
 import { Link } from '@inertiajs/react';
 import { Check, MessageCircle, Phone } from 'lucide-react';
 
 export default function ServicePage({ slug }: { slug: ServiceSlug }) {
     const { t, url, locale } = useI18n();
+    const contact = useContact();
     const services = getServices(locale);
     const service = services.find((s) => s.slug === slug) ?? services[0];
     const others = services.filter((s) => s.slug !== service.slug);
@@ -124,17 +125,19 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
                         </Button>
                         <div className="grid grid-cols-2 gap-2">
                             <Button asChild variant="outline" size="lg" className="h-12">
-                                <a href={CONTACT.phone.href}>
+                                <a href={contact.phone.href}>
                                     <Phone aria-hidden="true" />
                                     {t.servicesPage.ctaCall}
                                 </a>
                             </Button>
-                            <Button asChild variant="outline" size="lg" className="h-12">
-                                <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
-                                    <MessageCircle aria-hidden="true" />
-                                    {t.servicesPage.ctaWhatsapp}
-                                </a>
-                            </Button>
+                            {contact.whatsapp && (
+                                <Button asChild variant="outline" size="lg" className="h-12">
+                                    <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
+                                        <MessageCircle aria-hidden="true" />
+                                        {t.servicesPage.ctaWhatsapp}
+                                    </a>
+                                </Button>
+                            )}
                         </div>
                     </div>
 

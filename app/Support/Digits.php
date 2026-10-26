@@ -14,6 +14,12 @@ class Digits
         return str_replace(self::LATIN, self::PERSIAN, $text);
     }
 
+    /** Persian (۰-۹) and Arabic (٠-٩) digits → 0-9, e.g. for phone numbers typed in the panel. */
+    public static function toLatin(string $text): string
+    {
+        return str_replace([...self::PERSIAN, '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'], [...self::LATIN, ...self::LATIN], $text);
+    }
+
     /** Only the visible text of HTML; tags, links and image addresses stay as they are. */
     public static function toPersianHtml(string $html): string
     {

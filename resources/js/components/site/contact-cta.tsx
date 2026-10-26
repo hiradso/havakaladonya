@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/i18n';
-import { CONTACT } from '@/lib/contact';
+import { useContact } from '@/lib/contact';
 import { Link } from '@inertiajs/react';
 import { MessageCircle, Phone } from 'lucide-react';
 
 /** Full-width "talk to us" band used at the bottom of inner pages. */
 export default function ContactCta({ title, text }: { title?: string; text?: string }) {
     const { t, url } = useI18n();
+    const contact = useContact();
 
     return (
         <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6">
@@ -20,17 +21,19 @@ export default function ContactCta({ title, text }: { title?: string; text?: str
                         <Link href={url('/quote')}>{t.servicesPage.ctaQuote}</Link>
                     </Button>
                     <Button asChild size="lg" variant="outline" className="h-12 px-6">
-                        <a href={CONTACT.phone.href}>
+                        <a href={contact.phone.href}>
                             <Phone aria-hidden="true" />
                             {t.servicesPage.ctaCall}
                         </a>
                     </Button>
-                    <Button asChild size="lg" variant="outline" className="h-12 px-6">
-                        <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
-                            <MessageCircle aria-hidden="true" />
-                            {t.servicesPage.ctaWhatsapp}
-                        </a>
-                    </Button>
+                    {contact.whatsapp && (
+                        <Button asChild size="lg" variant="outline" className="h-12 px-6">
+                            <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
+                                <MessageCircle aria-hidden="true" />
+                                {t.servicesPage.ctaWhatsapp}
+                            </a>
+                        </Button>
+                    )}
                 </div>
             </div>
         </section>

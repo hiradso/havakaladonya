@@ -1,0 +1,265 @@
+{
+  "home": {
+    "fa": {
+      "home": {
+        "metaTitle": "حمل و نقل بین‌المللی، ترخیص و خرید بازرگانی",
+        "metaDescription": "هوا کالا دنیا؛ حمل هوایی، دریایی، جاده‌ای و ریلی از ایران به اروپا، روسیه، آسیای میانه، چین و هند، به‌همراه ترخیص کالا، خرید بازرگانی و رهگیری آنلاین محموله.",
+        "heroTitleA": "از هر مبدأ،",
+        "heroTitleB": "به هر مقصد.",
+        "heroText": "حمل هوایی، دریایی، جاده‌ای و ریلی به‌همراه خرید بازرگانی و ترخیص کالا؛ و رهگیری آنلاین هر محموله.",
+        "photoAlt": "کشتی کانتینری در بندر و هواپیمای باری در حال پرواز",
+        "routesTitle": "مسیرهای اصلی",
+        "servicesTitle": "خدمات",
+        "stats": [
+          {
+            "value": "۱۳۹۱",
+            "label": "سال تأسیس"
+          },
+          {
+            "value": "۴",
+            "label": "روش حمل"
+          },
+          {
+            "value": "۹",
+            "label": "خدمت تخصصی"
+          },
+          {
+            "value": "۲۴/۷",
+            "label": "پاسخگویی"
+          }
+        ],
+        "blogTitle": "مقالات",
+        "ctaTitle": "قیمت حمل بارتان را بدانید",
+        "ctaText": "مشخصات بار و مسیر را ثبت کنید؛ کارشناس ما با شما تماس می‌گیرد.",
+        "ctaButton": "شروع استعلام"
+      }
+    },
+    "en": {
+      "home": {
+        "metaTitle": "International freight, customs clearance and procurement",
+        "metaDescription": "Hava Kala Donya: air, sea, road and rail freight from Iran to Europe, Russia, Central Asia, China and India, with customs clearance, procurement and online shipment tracking.",
+        "heroTitleA": "From any origin,",
+        "heroTitleB": "to any destination.",
+        "heroText": "Air, sea, road and rail freight together with procurement and customs clearance — with online tracking for every shipment.",
+        "photoAlt": "Container ship at port with a cargo plane overhead",
+        "routesTitle": "Main routes",
+        "servicesTitle": "Services",
+        "stats": [
+          {
+            "value": "2012",
+            "label": "Founded"
+          },
+          {
+            "value": "4",
+            "label": "Transport modes"
+          },
+          {
+            "value": "9",
+            "label": "Specialised services"
+          },
+          {
+            "value": "24/7",
+            "label": "Support"
+          }
+        ],
+        "blogTitle": "Articles",
+        "ctaTitle": "Find out what your shipment costs",
+        "ctaText": "Tell us about your cargo and route; our team will get back to you.",
+        "ctaButton": "Start a quote"
+      }
+    },
+    "hero_media": null,
+    "show": {
+      "routes": true,
+      "services": true,
+      "stats": true,
+      "blog": true,
+      "cta": true
+    }
+  },
+  "about": {
+    "fa": {
+      "about": {
+        "metaTitle": "درباره هوا کالا دنیا",
+        "metaDescription": "هوا کالا دنیا، شرکت حمل و نقل بین‌المللی ثبت‌شده در سال ۱۳۹۱ با تجربه‌ای که از سال ۱۳۶۵ در بازرگانی و بار هوایی آغاز شد.",
+        "title": "درباره هوا کالا دنیا",
+        "lead": "شرکت حمل و نقل بین‌المللی که در سال ۱۳۹۱ ثبت شد؛ با تجربه‌ای که از سال ۱۳۶۵ در بازرگانی و حمل بار هوایی شکل گرفت.",
+        "storyTitle": "داستان ما",
+        "story": [
+          "ژیلا سیفی درخشان، بنیان‌گذار مجموعه، از ۱۸ سالگی و هم‌زمان با تحصیل وارد بازرگانی و حمل و نقل بین‌المللی شد و در این سال‌ها از کارشناس فروش تا مدیرعامل و رئیس هیئت‌مدیره را تجربه کرد. او از بنیان‌گذاران «هوا کالا» بود؛ از نخستین شرکت‌های بار هوایی که خدمات درب‌به‌درب ارائه می‌داد.",
+          "همکاری با ایرلاین‌هایی مانند ایران‌ایر، ماهان و لوفت‌هانزا و نمایندگی فروش بار (GSA) هواپیمایی آسمان و پیام، پشتوانه‌ی تجربه‌ای است که امروز در خدمت مشتریان هوا کالا دنیاست.",
+          "امروز هوا کالا دنیا به‌شکل یک هلدینگ، حمل هوایی، دریایی، جاده‌ای و ریلی را در کنار ترخیص کالا و خدمات بازرگانی ارائه می‌دهد. هدف ما تبدیل شدن به برترین برند حمل و نقل در خاورمیانه است."
+        ],
+        "timelineTitle": "مسیر ما",
+        "timeline": [
+          {
+            "year": "۱۳۶۵",
+            "text": "آغاز فعالیت بنیان‌گذار در بازرگانی و حمل و نقل بین‌المللی"
+          },
+          {
+            "year": "۱۳۹۱",
+            "text": "ثبت شرکت هوا کالا دنیا"
+          },
+          {
+            "year": "امروز",
+            "text": "هلدینگ حمل و نقل با چهار روش حمل، ترخیص کالا و خدمات بازرگانی"
+          }
+        ],
+        "valuesTitle": "چه چیزی ما را متفاوت می‌کند",
+        "values": [
+          {
+            "title": "صداقت در کار",
+            "text": "قیمت و زمان واقعی را از اول می‌گوییم؛ اعتماد مشتری و همکار برای ما اولویت است."
+          },
+          {
+            "title": "یک مسئول برای کل مسیر",
+            "text": "حمل، ترخیص و تحویل را یک تیم پیگیری می‌کند و لازم نیست با چند شرکت هماهنگ شوید."
+          },
+          {
+            "title": "روش‌های کاری نوین",
+            "text": "از رهگیری آنلاین محموله تا اطلاع‌رسانی مرحله‌به‌مرحله، همیشه می‌دانید بارتان کجاست."
+          },
+          {
+            "title": "همه‌ی روش‌های حمل",
+            "text": "هوایی، دریایی، جاده‌ای و ریلی؛ و ترکیبی از آن‌ها، هرجا که به‌صرفه‌تر باشد."
+          }
+        ],
+        "teamTitle": "تیم ما"
+      }
+    },
+    "en": {
+      "about": {
+        "metaTitle": "About Hava Kala Donya",
+        "metaDescription": "Hava Kala Donya is an international freight company registered in 2012, built on experience in trade and air cargo going back to 1986.",
+        "title": "About Hava Kala Donya",
+        "lead": "An international freight company registered in 2012, built on experience in trade and air cargo going back to 1986.",
+        "storyTitle": "Our story",
+        "story": [
+          "Our founder, Zhila Seifi Derakhshan, started in trade and international transport at 18 while still studying, and over the years worked as a sales specialist, CEO and chair of the board. She was one of the founders of Hava Kala, one of the first air cargo companies to offer door-to-door service.",
+          "Experience with airlines such as Iran Air, Mahan Air and Lufthansa, and as cargo general sales agent (GSA) for Aseman Airlines and Payam Air, is the foundation Hava Kala Donya’s customers benefit from today.",
+          "Today Hava Kala Donya operates as a holding, offering air, sea, road and rail freight together with customs clearance and trade services. Our goal is to become the leading transport brand in the Middle East."
+        ],
+        "timelineTitle": "Our journey",
+        "timeline": [
+          {
+            "year": "1986",
+            "text": "Our founder starts in trade and international transport"
+          },
+          {
+            "year": "2012",
+            "text": "Hava Kala Donya is registered"
+          },
+          {
+            "year": "Today",
+            "text": "A transport holding with four freight modes, customs clearance and trade services"
+          }
+        ],
+        "valuesTitle": "What makes us different",
+        "values": [
+          {
+            "title": "Honest work",
+            "text": "Real prices and real timelines from the start — the trust of customers and partners comes first."
+          },
+          {
+            "title": "One team, end to end",
+            "text": "Transport, clearance and delivery are followed by one team, so you don’t juggle several companies."
+          },
+          {
+            "title": "Modern ways of working",
+            "text": "From online shipment tracking to step-by-step updates, you always know where your cargo is."
+          },
+          {
+            "title": "Every transport mode",
+            "text": "Air, sea, road and rail — and combinations of them wherever that saves money."
+          }
+        ],
+        "teamTitle": "Our team"
+      }
+    },
+    "header_media": null,
+    "show": {
+      "timeline": true,
+      "values": true,
+      "team": true
+    },
+    "team": [
+      {
+        "name_fa": "ژیلا سیفی درخشان",
+        "name_en": "Zhila Seifi Derakhshan",
+        "role_fa": "بنیان‌گذار",
+        "role_en": "Founder",
+        "photo_media": null,
+        "photo_default": "team-zhila-seifi-800"
+      },
+      {
+        "name_fa": "خاتم گرجی",
+        "name_en": "Khatam Gorji",
+        "role_fa": "",
+        "role_en": "",
+        "photo_media": null,
+        "photo_default": "team-khatam-gorji-640"
+      },
+      {
+        "name_fa": "مهرداد ساجدپور",
+        "name_en": "Mehrdad Sajedpour",
+        "role_fa": "",
+        "role_en": "",
+        "photo_media": null,
+        "photo_default": "team-mehrdad-sajedpour-359"
+      }
+    ]
+  },
+  "contact": {
+    "fa": {
+      "contact": {
+        "metaTitle": "تماس با هوا کالا دنیا",
+        "metaDescription": "تلفن، واتس‌اپ، ایمیل و نشانی دفتر هوا کالا دنیا در تهران، میدان گلها.",
+        "title": "تماس با ما",
+        "lead": "برای استعلام قیمت، پیگیری بار یا هر سؤالی با ما در تماس باشید.",
+        "formTitle": "برای ما پیام بگذارید",
+        "formText": "پیامتان را بنویسید؛ در ساعات کاری پاسخ می‌دهیم.",
+        "hours": ""
+      },
+      "footer": {
+        "address": "تهران، میدان گلها، خ کاج شمالی، پلاک ۱۴۶، طبقه ۲، واحد ۳"
+      }
+    },
+    "en": {
+      "contact": {
+        "metaTitle": "Contact Hava Kala Donya",
+        "metaDescription": "Phone, WhatsApp, email and office address of Hava Kala Donya in Golha Square, Tehran.",
+        "title": "Contact us",
+        "lead": "Get in touch for a quote, to follow up a shipment, or with any question.",
+        "formTitle": "Send us a message",
+        "formText": "Write your message and we’ll reply during business hours.",
+        "hours": ""
+      },
+      "footer": {
+        "address": "Unit 3, 2nd floor, No. 146, North Kaj St., Golha Sq., Tehran"
+      }
+    },
+    "phone": "021 8801 5232",
+    "mobile": "0912 333 6855",
+    "fax": "021 8802 4527",
+    "whatsapp": "0912 333 6855",
+    "email": "info@havakaladonya.com",
+    "instagram": "havakaladonya",
+    "linkedin": "",
+    "telegram": "",
+    "map_url": "https://www.google.com/maps/search/?api=1&query=%D9%85%DB%8C%D8%AF%D8%A7%D9%86%20%DA%AF%D9%84%D9%87%D8%A7%D8%8C%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DA%A9%D8%A7%D8%AC%20%D8%B4%D9%85%D8%A7%D9%84%DB%8C%D8%8C%20%D9%BE%D9%84%D8%A7%DA%A9%20%DB%B1%DB%B4%DB%B6%D8%8C%20%D8%AA%D9%87%D8%B1%D8%A7%D9%86"
+  },
+  "footer": {
+    "fa": {
+      "footer": {
+        "about": "شرکت حمل و نقل بین‌المللی، خرید بازرگانی و ترخیص کالا.",
+        "rights": "تمامی حقوق برای هوا کالا دنیا محفوظ است."
+      }
+    },
+    "en": {
+      "footer": {
+        "about": "International freight forwarding, commercial purchase and customs clearance.",
+        "rights": "All rights reserved — Hava Kala Donya."
+      }
+    }
+  }
+}

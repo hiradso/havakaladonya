@@ -7,15 +7,31 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
-import { CONTACT } from '@/lib/contact';
+import { useContact } from '@/lib/contact';
 import { Link, useForm } from '@inertiajs/react';
-import { ArrowRight, AtSign, Camera, CircleCheck, Mail, MapPin, MessageCircle, Phone, Printer, Search, Smartphone } from 'lucide-react';
+import {
+    ArrowRight,
+    AtSign,
+    Briefcase,
+    Camera,
+    CircleCheck,
+    Clock,
+    Mail,
+    MapPin,
+    MessageCircle,
+    Phone,
+    Printer,
+    Search,
+    Send,
+    Smartphone,
+} from 'lucide-react';
 import { type FormEvent, type ReactNode } from 'react';
 
 export default function Contact({ sent }: { sent?: boolean }) {
     const { t, url, digits, locale } = useI18n();
     const appUrl = useAppUrl();
     const c = t.contact;
+    const contact = useContact();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         website: '', // honeypot
@@ -40,7 +56,7 @@ export default function Contact({ sent }: { sent?: boolean }) {
                 title={c.metaTitle}
                 description={c.metaDescription}
                 breadcrumbs={[{ name: t.nav.contact, path: url('/contact') }]}
-                jsonLd={[organizationLd(appUrl, locale, t.brand.name)]}
+                jsonLd={[organizationLd(appUrl, locale, t.brand.name, contact, t.footer.address)]}
             />
 
             <PageHeader title={c.title} lead={c.lead} crumbs={[{ label: t.nav.contact }]} />
@@ -49,27 +65,57 @@ export default function Contact({ sent }: { sent?: boolean }) {
                 {/* Contact methods */}
                 <div className="flex flex-col gap-4">
                     <ul className="grid gap-3 sm:grid-cols-2">
-                        <Method icon={<Phone />} label={c.phone} href={CONTACT.phone.href}>
-                            <span dir="ltr">{digits(CONTACT.phone.display)}</span>
-                        </Method>
-                        <Method icon={<Smartphone />} label={c.mobile} href={CONTACT.mobile.href}>
-                            <span dir="ltr">{digits(CONTACT.mobile.display)}</span>
-                        </Method>
-                        <Method icon={<MessageCircle />} label={c.whatsapp} href={CONTACT.whatsapp} external>
-                            {c.whatsappAction}
-                        </Method>
-                        <Method icon={<Mail />} label={c.email} href={`mailto:${CONTACT.email}`}>
-                            <span dir="ltr">{CONTACT.email}</span>
-                        </Method>
-                        <Method icon={<Camera />} label={c.instagram} href={CONTACT.instagram.href} external>
-                            <span dir="ltr" className="inline-flex items-center gap-0.5">
-                                <AtSign className="size-4" aria-hidden="true" />
-                                {CONTACT.instagram.handle}
-                            </span>
-                        </Method>
-                        <Method icon={<Printer />} label={c.fax}>
-                            <span dir="ltr">{digits(CONTACT.fax.display)}</span>
-                        </Method>
+                        {contact.phone.display && (
+                            <Method icon={<Phone />} label={c.phone} href={contact.phone.href}>
+                                <span dir="ltr">{digits(contact.phone.display)}</span>
+                            </Method>
+                        )}
+                        {contact.mobile.display && (
+                            <Method icon={<Smartphone />} label={c.mobile} href={contact.mobile.href}>
+                                <span dir="ltr">{digits(contact.mobile.display)}</span>
+                            </Method>
+                        )}
+                        {contact.whatsapp && (
+                            <Method icon={<MessageCircle />} label={c.whatsapp} href={contact.whatsapp} external>
+                                {c.whatsappAction}
+                            </Method>
+                        )}
+                        {contact.email && (
+                            <Method icon={<Mail />} label={c.email} href={`mailto:${contact.email}`}>
+                                <span dir="ltr">{contact.email}</span>
+                            </Method>
+                        )}
+                        {contact.instagram && (
+                            <Method icon={<Camera />} label={c.instagram} href={contact.instagram.href} external>
+                                <span dir="ltr" className="inline-flex items-center gap-0.5">
+                                    <AtSign className="size-4" aria-hidden="true" />
+                                    {contact.instagram.handle}
+                                </span>
+                            </Method>
+                        )}
+                        {contact.telegram && (
+                            <Method icon={<Send />} label={c.telegram} href={contact.telegram.href} external>
+                                <span dir="ltr" className="inline-flex items-center gap-0.5">
+                                    <AtSign className="size-4" aria-hidden="true" />
+                                    {contact.telegram.handle}
+                                </span>
+                            </Method>
+                        )}
+                        {contact.linkedin && (
+                            <Method icon={<Briefcase />} label={c.linkedin} href={contact.linkedin} external>
+                                {c.linkedin}
+                            </Method>
+                        )}
+                        {contact.fax.display && (
+                            <Method icon={<Printer />} label={c.fax}>
+                                <span dir="ltr">{digits(contact.fax.display)}</span>
+                            </Method>
+                        )}
+                        {c.hours && (
+                            <Method icon={<Clock />} label={c.hoursLabel}>
+                                {digits(c.hours)}
+                            </Method>
+                        )}
                     </ul>
 
                     <div className="bg-card flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
@@ -80,11 +126,13 @@ export default function Contact({ sent }: { sent?: boolean }) {
                                 <address className="leading-7 font-medium not-italic">{t.footer.address}</address>
                             </div>
                         </div>
-                        <Button asChild variant="outline" size="lg" className="h-11 shrink-0">
-                            <a href={CONTACT.mapUrl} target="_blank" rel="noopener noreferrer">
-                                {c.directions}
-                            </a>
-                        </Button>
+                        {contact.mapUrl && (
+                            <Button asChild variant="outline" size="lg" className="h-11 shrink-0">
+                                <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer">
+                                    {c.directions}
+                                </a>
+                            </Button>
+                        )}
                     </div>
 
                     <div className="flex flex-col gap-3 pt-2">

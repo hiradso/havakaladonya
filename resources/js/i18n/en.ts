@@ -203,6 +203,10 @@ const en: typeof fa = {
         quickTitle: 'Looking for these?',
         quickQuote: 'Get a freight quote',
         quickTracking: 'Track a shipment',
+        hours: '',
+        hoursLabel: 'Working hours',
+        telegram: 'Telegram',
+        linkedin: 'LinkedIn',
     },
     blog: {
         metaTitle: 'Freight and trade articles',

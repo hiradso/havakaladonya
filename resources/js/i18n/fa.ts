@@ -197,6 +197,10 @@ const fa = {
         quickTitle: 'دنبال این‌ها هستید؟',
         quickQuote: 'استعلام قیمت حمل',
         quickTracking: 'رهگیری محموله',
+        hours: '',
+        hoursLabel: 'ساعت کاری',
+        telegram: 'تلگرام',
+        linkedin: 'لینکدین',
     },
     blog: {
         metaTitle: 'مقالات حمل و نقل و بازرگانی',

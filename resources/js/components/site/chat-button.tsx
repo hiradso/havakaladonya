@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useI18n } from '@/i18n';
-import { CONTACT } from '@/lib/contact';
+import { useContact } from '@/lib/contact';
 import { cn } from '@/lib/utils';
 import axios, { AxiosError } from 'axios';
 import { MessageCircle, Phone, SendHorizontal, X } from 'lucide-react';
@@ -52,6 +52,7 @@ const writeToken = (token: string | null) => {
 
 export default function ChatButton() {
     const { t, locale, digits } = useI18n();
+    const contact = useContact();
     const c = t.chat;
 
     const [open, setOpen] = useState(false);
@@ -167,15 +168,17 @@ export default function ChatButton() {
                             </span>
                         </div>
                         <Button asChild variant="ghost" size="icon" className="size-10" aria-label={c.call}>
-                            <a href={CONTACT.phone.href}>
+                            <a href={contact.phone.href}>
                                 <Phone />
                             </a>
                         </Button>
-                        <Button asChild variant="ghost" size="icon" className="size-10" aria-label={c.whatsapp}>
-                            <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
-                                <MessageCircle />
-                            </a>
-                        </Button>
+                        {contact.whatsapp && (
+                            <Button asChild variant="ghost" size="icon" className="size-10" aria-label={c.whatsapp}>
+                                <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer">
+                                    <MessageCircle />
+                                </a>
+                            </Button>
+                        )}
                         <Button variant="ghost" size="icon" className="size-10" onClick={() => setOpen(false)} aria-label={c.close}>
                             <X />
                         </Button>

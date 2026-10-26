@@ -1,5 +1,5 @@
 import { useI18n } from '@/i18n';
-import { CONTACT } from '@/lib/contact';
+import { type SiteContact } from '@/lib/contact';
 import { type SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
@@ -90,7 +90,7 @@ export default function Seo({ title, description, image, type = 'website', noind
 }
 
 /** The company as structured data (shown on the home and contact pages). */
-export function organizationLd(base: string, locale: 'fa' | 'en', name: string): JsonLd {
+export function organizationLd(base: string, locale: 'fa' | 'en', name: string, contact: SiteContact, address?: string): JsonLd {
     return {
         '@type': 'Organization',
         '@id': `${base}/#organization`,
@@ -98,24 +98,25 @@ export function organizationLd(base: string, locale: 'fa' | 'en', name: string):
         alternateName: locale === 'fa' ? 'Hava Kala Donya' : 'هوا کالا دنیا',
         url: base + (locale === 'en' ? '/en' : '/'),
         logo: `${base}/images/brand/icon-512.png`,
-        email: CONTACT.email,
-        telephone: '+98-21-88015232',
-        faxNumber: '+98-21-88024527',
+        email: contact.email || undefined,
+        telephone: contact.phoneIntl || undefined,
+        faxNumber: contact.faxIntl || undefined,
         foundingDate: '2012',
         address: {
             '@type': 'PostalAddress',
             streetAddress:
-                locale === 'fa' ? 'میدان گلها، خیابان کاج شمالی، پلاک ۱۴۶، طبقه ۲، واحد ۳' : 'Unit 3, 2nd floor, No. 146, North Kaj St., Golha Sq.',
+                address ??
+                (locale === 'fa' ? 'میدان گلها، خیابان کاج شمالی، پلاک ۱۴۶، طبقه ۲، واحد ۳' : 'Unit 3, 2nd floor, No. 146, North Kaj St., Golha Sq.'),
             addressLocality: locale === 'fa' ? 'تهران' : 'Tehran',
             addressCountry: 'IR',
         },
         contactPoint: {
             '@type': 'ContactPoint',
-            telephone: '+98-912-333-6855',
+            telephone: contact.mobileIntl || contact.phoneIntl || undefined,
             contactType: 'customer service',
             availableLanguage: ['fa', 'en'],
         },
-        sameAs: [CONTACT.instagram.href],
+        sameAs: [contact.instagram?.href, contact.telegram?.href, contact.linkedin].filter(Boolean),
     };
 }
 
