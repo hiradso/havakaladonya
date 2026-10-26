@@ -38,7 +38,12 @@ trap 'php artisan up || true' EXIT
 php artisan migrate --force
 
 if changed '^package(-lock)?\.json$' || [ ! -d node_modules ]; then
-    npm ci --no-audit --no-fund --silent
+    # The registry is sometimes slow from the server: longer timeouts and a few attempts.
+    for attempt in 1 2 3; do
+        npm ci --no-audit --no-fund --silent --fetch-timeout=600000 --fetch-retries=5 && break
+        [ "$attempt" = 3 ] && { echo "npm ci failed 3 times."; exit 1; }
+        echo "npm ci failed, retrying ($attempt)…"; sleep 10
+    done
 fi
 if [ "$before" = "$after" ] || changed '^(resources/(js|css)|vite\.config|package|tsconfig)' || [ ! -f public/build/manifest.json ]; then
     npm run build:ssr --silent
