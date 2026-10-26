@@ -3,23 +3,11 @@
 namespace App\Support;
 
 /**
- * Service page slugs. The page content lives in resources/js/content/services.ts;
- * keep both lists in the same order.
+ * Old WordPress addresses of the service pages. The services themselves are App\Models\Service
+ * (edited in the panel: Content → Services).
  */
 class Services
 {
-    public const SLUGS = [
-        'air-freight',
-        'sea-freight',
-        'road-freight',
-        'rail-freight',
-        'customs-clearance',
-        'sourcing',
-        'passenger-freight',
-        'consulting',
-        'trading-company',
-    ];
-
     /**
      * Addresses of the old WordPress site → new pages, so links on Google and
      * elsewhere keep working (301 = permanent, search engines move the ranking over).

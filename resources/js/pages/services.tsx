@@ -2,15 +2,14 @@ import ContactCta from '@/components/site/contact-cta';
 import PageHeader from '@/components/site/page-header';
 import Seo from '@/components/site/seo';
 import ServiceIcon from '@/components/site/service-icon';
-import { getServices } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
+import type { ServiceCard } from '@/types/service';
 import { Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 
-export default function Services() {
-    const { t, url, locale } = useI18n();
-    const services = getServices(locale);
+export default function Services({ services = [] }: { services?: ServiceCard[] }) {
+    const { t, url } = useI18n();
 
     return (
         <SiteLayout>
@@ -31,7 +30,7 @@ export default function Services() {
                                 className="group bg-card hover:border-primary focus-visible:border-primary flex w-full items-start gap-4 rounded-2xl border p-4 transition-colors sm:flex-col sm:p-6"
                             >
                                 <span className="bg-secondary text-brand2-text dark:text-primary-text flex size-12 shrink-0 items-center justify-center rounded-xl">
-                                    <ServiceIcon slug={service.slug} className="size-6" />
+                                    <ServiceIcon icon={service.icon} className="size-6" />
                                 </span>
                                 <span className="flex min-w-0 flex-1 flex-col gap-1 sm:gap-2">
                                     <strong className="text-lg font-black sm:text-xl">{service.title}</strong>

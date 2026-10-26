@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\Media;
 use App\Models\Post;
+use App\Models\Service;
 use App\Models\Setting;
 
 /**
@@ -31,6 +32,10 @@ class MediaUsage
             if (self::containsId($setting->value, $media->id)) {
                 $places[] = self::SETTING_LABELS[$setting->key] ?? $setting->key;
             }
+        }
+
+        foreach (Service::query()->where('media_id', $media->id)->get(['content']) as $service) {
+            $places[] = 'خدمت: '.($service->content['fa']['title'] ?? '');
         }
 
         $paths = $media->allPaths();

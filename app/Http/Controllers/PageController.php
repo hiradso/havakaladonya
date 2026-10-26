@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Service;
 use App\Support\Services;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,19 +22,31 @@ class PageController extends Controller
                 ->get()
                 ->map->toCard()
                 ->values(),
+            'services' => $this->serviceCards(),
         ]);
     }
 
     public function services(): Response
     {
-        return Inertia::render('services');
+        return Inertia::render('services', ['services' => $this->serviceCards()]);
     }
 
     public function service(string $slug): Response
     {
-        abort_unless(in_array($slug, Services::SLUGS, true), 404);
+        $service = Service::active()->with('media')->where('slug', $slug)->firstOrFail();
 
-        return Inertia::render('service', ['slug' => $slug]);
+        return Inertia::render('service', [
+            'service' => $service->toPage(app()->getLocale()),
+            'others' => array_values(array_filter($this->serviceCards(), fn (array $s) => $s['slug'] !== $service->slug)),
+        ]);
+    }
+
+    /** Active services for lists, in the order set in the panel. */
+    private function serviceCards(): array
+    {
+        $locale = app()->getLocale();
+
+        return Service::active()->get()->map(fn (Service $s) => $s->toCard($locale))->all();
     }
 
     public function about(): Response

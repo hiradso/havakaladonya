@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Support\Services;
+use App\Models\Service;
 use Illuminate\Http\Response;
 
 /**
@@ -17,7 +17,7 @@ class SitemapController extends Controller
         $base = rtrim((string) config('app.url'), '/');
 
         $pages = ['/', '/services', '/about', '/contact', '/blog', '/quote', '/tracking'];
-        foreach (Services::SLUGS as $slug) {
+        foreach (Service::active()->pluck('slug') as $slug) {
             $pages[] = "/services/{$slug}";
         }
 

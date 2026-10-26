@@ -1,20 +1,41 @@
-import type { ServiceSlug } from '@/content/services';
-import { Briefcase, FileCheck2, Globe2, Lightbulb, Luggage, Plane, Ship, TrainFront, Truck, type LucideProps } from 'lucide-react';
+import {
+    Briefcase,
+    Container,
+    FileCheck2,
+    Globe2,
+    Handshake,
+    Lightbulb,
+    Luggage,
+    Package,
+    Plane,
+    ShieldCheck,
+    Ship,
+    TrainFront,
+    Truck,
+    Warehouse,
+    type LucideProps,
+} from 'lucide-react';
 
-const ICONS: Record<ServiceSlug, React.ComponentType<LucideProps>> = {
-    'air-freight': Plane,
-    'sea-freight': Ship,
-    'road-freight': Truck,
-    'rail-freight': TrainFront,
-    'customs-clearance': FileCheck2,
-    sourcing: Globe2,
-    'passenger-freight': Luggage,
-    consulting: Lightbulb,
-    'trading-company': Briefcase,
+/** Icon keys chosen in the panel (App\Models\Service::ICONS). */
+const ICONS: Record<string, React.ComponentType<LucideProps>> = {
+    plane: Plane,
+    ship: Ship,
+    truck: Truck,
+    train: TrainFront,
+    'file-check': FileCheck2,
+    globe: Globe2,
+    luggage: Luggage,
+    lightbulb: Lightbulb,
+    briefcase: Briefcase,
+    package: Package,
+    warehouse: Warehouse,
+    shield: ShieldCheck,
+    container: Container,
+    handshake: Handshake,
 };
 
-export default function ServiceIcon({ slug, ...props }: { slug: ServiceSlug } & LucideProps) {
-    const Icon = ICONS[slug];
+export default function ServiceIcon({ icon, ...props }: { icon: string } & LucideProps) {
+    const Icon = ICONS[icon] ?? Package;
 
     return <Icon aria-hidden="true" {...props} />;
 }

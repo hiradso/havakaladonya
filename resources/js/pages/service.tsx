@@ -2,29 +2,26 @@ import PageHeader from '@/components/site/page-header';
 import Seo, { useAppUrl } from '@/components/site/seo';
 import ServiceIcon from '@/components/site/service-icon';
 import { Button } from '@/components/ui/button';
-import { getServices, SERVICE_PHOTOS, type ServiceSlug } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { useContact } from '@/lib/contact';
+import type { ServiceCard, ServicePageData } from '@/types/service';
 import { Link } from '@inertiajs/react';
 import { Check, MessageCircle, Phone } from 'lucide-react';
 
-export default function ServicePage({ slug }: { slug: ServiceSlug }) {
-    const { t, url, locale } = useI18n();
+export default function ServicePage({ service, others = [] }: { service: ServicePageData; others?: ServiceCard[] }) {
+    const { t, url } = useI18n();
     const contact = useContact();
-    const services = getServices(locale);
-    const service = services.find((s) => s.slug === slug) ?? services[0];
-    const others = services.filter((s) => s.slug !== service.slug);
-    const photo = SERVICE_PHOTOS[service.slug];
+    const photo = service.photo;
     const appUrl = useAppUrl();
     const quoteHref = url('/quote') + (service.quoteMode ? `?mode=${service.quoteMode}` : '');
 
     return (
         <SiteLayout>
             <Seo
-                title={service.title}
-                description={service.lead}
-                image={photo ? `/images/photos/${photo}.webp` : null}
+                title={service.metaTitle || service.title}
+                description={service.metaDescription || service.lead}
+                image={photo?.src ?? null}
                 breadcrumbs={[
                     { name: t.nav.services, path: url('/services') },
                     { name: service.title, path: url(`/services/${service.slug}`) },
@@ -51,41 +48,45 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
                 <article className="flex min-w-0 flex-col gap-10">
                     {photo ? (
                         <img
-                            src={`/images/photos/${photo}.webp`}
-                            alt=""
-                            width={800}
-                            height={450}
+                            src={photo.src}
+                            srcSet={photo.srcset || undefined}
+                            sizes="(min-width: 1024px) 860px, 100vw"
+                            alt={photo.alt}
+                            width={photo.width}
+                            height={photo.height}
                             className="aspect-[16/9] w-full rounded-3xl object-cover"
                         />
                     ) : (
                         <div className="bg-card text-brand2-text dark:text-primary-text flex aspect-[21/9] w-full items-center justify-center rounded-3xl border">
-                            <ServiceIcon slug={service.slug} className="size-16 sm:size-20" strokeWidth={1.25} />
+                            <ServiceIcon icon={service.icon} className="size-16 sm:size-20" strokeWidth={1.25} />
                         </div>
                     )}
 
                     <div className="flex flex-col gap-5 text-base leading-8 sm:text-lg sm:leading-9">
-                        {service.body.map((p) => (
-                            <p key={p}>{p}</p>
+                        {service.body.map((p, i) => (
+                            <p key={i}>{p}</p>
                         ))}
                     </div>
 
-                    <section aria-labelledby="features-title" className="flex flex-col gap-4">
-                        <h2 id="features-title" className="text-2xl font-black sm:text-3xl">
-                            {t.servicesPage.whatWeDo}
-                        </h2>
-                        <ul className="grid gap-3 sm:grid-cols-2">
-                            {service.features.map((f) => (
-                                <li key={f} className="bg-card flex items-start gap-3 rounded-2xl border p-4">
-                                    <span className="bg-primary text-primary-foreground mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full">
-                                        <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
-                                    </span>
-                                    <span className="leading-7 font-medium">{f}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
+                    {service.features.length > 0 && (
+                        <section aria-labelledby="features-title" className="flex flex-col gap-4">
+                            <h2 id="features-title" className="text-2xl font-black sm:text-3xl">
+                                {t.servicesPage.whatWeDo}
+                            </h2>
+                            <ul className="grid gap-3 sm:grid-cols-2">
+                                {service.features.map((f, i) => (
+                                    <li key={i} className="bg-card flex items-start gap-3 rounded-2xl border p-4">
+                                        <span className="bg-primary text-primary-foreground mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full">
+                                            <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+                                        </span>
+                                        <span className="leading-7 font-medium">{f}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
 
-                    {service.groups && (
+                    {service.groups.length > 0 && (
                         <div className="grid gap-4 md:grid-cols-2">
                             {service.groups.map((group) => (
                                 <section key={group.title} className="bg-card rounded-2xl border p-5 sm:p-6">
@@ -152,7 +153,7 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
                                         href={url(`/services/${s.slug}`)}
                                         className="text-muted-foreground hover:text-foreground flex min-h-11 items-center gap-3"
                                     >
-                                        <ServiceIcon slug={s.slug} className="size-5 shrink-0" />
+                                        <ServiceIcon icon={s.icon} className="size-5 shrink-0" />
                                         {s.title}
                                     </Link>
                                 </li>

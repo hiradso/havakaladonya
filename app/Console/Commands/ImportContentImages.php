@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Media;
+use App\Models\Service;
 use App\Support\ImageOptimizer;
 use App\Support\SiteContent;
 use Illuminate\Console\Command;
 
 /**
- * One-time: copies the site's built-in photos (home banner, about header, team) into the
+ * One-time: copies the site's built-in photos (home banner, about header, team, services) into the
  * media library and links them in "Site content", so they can be seen and swapped in the panel.
  * Safe to run again: anything already linked is left alone.
  */
@@ -37,6 +39,12 @@ class ImportContentImages extends Command
         }
         SiteContent::save('about', $about);
 
+        foreach (Service::query()->whereNull('media_id')->whereNotNull('photo_default')->get() as $service) {
+            $title = $service->content['fa']['title'] ?? $service->slug;
+            $service->media_id = $this->import($service->photo_default, $title, $service->content['en']['title'] ?? null, 'خدمت: '.$title);
+            $service->save();
+        }
+
         $this->info('Done.');
 
         return self::SUCCESS;
@@ -44,6 +52,13 @@ class ImportContentImages extends Command
 
     private function import(string $file, ?string $altFa, ?string $altEn, ?string $title): ?int
     {
+        // The same photo in another size was imported already (e.g. port-plane-800 vs port-plane-1600): reuse it.
+        $base = preg_replace('/-\d+$/', '', $file);
+        $existing = Media::query()->where('original_name', 'like', $base.'-%')->value('id');
+        if ($existing) {
+            return $existing;
+        }
+
         $path = public_path("images/photos/{$file}.webp");
         if (! is_file($path)) {
             $this->warn("Missing: {$path}");

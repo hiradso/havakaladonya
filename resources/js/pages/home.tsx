@@ -3,12 +3,12 @@ import Seo, { organizationLd, useAppUrl } from '@/components/site/seo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { getServices } from '@/content/services';
 import { useI18n } from '@/i18n';
 import SiteLayout from '@/layouts/site-layout';
 import { useContact } from '@/lib/contact';
 import { type SharedData } from '@/types';
 import type { PostCard as PostCardData } from '@/types/blog';
+import type { ServiceCard } from '@/types/service';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowRight, Search } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
@@ -28,9 +28,8 @@ function DirArrow({ className = '' }: { className?: string }) {
     return <ArrowRight className={`rtl:-scale-x-100 ${className}`} aria-hidden="true" />;
 }
 
-export default function Home({ posts = [] }: { posts?: PostCardData[] }) {
+export default function Home({ posts = [], services = [] }: { posts?: PostCardData[]; services?: ServiceCard[] }) {
     const { t, url, digits, locale } = useI18n();
-    const services = getServices(locale);
     const appUrl = useAppUrl();
     const [code, setCode] = useState('');
     const contact = useContact();
@@ -166,7 +165,7 @@ export default function Home({ posts = [] }: { posts?: PostCardData[] }) {
 
             {/* Services */}
 
-            {show('services') && (
+            {show('services') && services.length > 0 && (
                 <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:pb-24" aria-labelledby="services-title">
                     <h2 id="services-title" className="mb-6 text-3xl font-black sm:text-4xl">
                         {t.home.servicesTitle}

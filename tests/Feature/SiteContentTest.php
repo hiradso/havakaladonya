@@ -85,7 +85,7 @@ class SiteContentTest extends TestCase
         $this->artisan('content:import-images')->assertSuccessful();
         $this->artisan('content:import-images')->assertSuccessful();
 
-        $this->assertSame(5, Media::count());
+        $this->assertSame(8, Media::count()); // 5 site photos + 3 service photos (2 reuse the same files)
         $this->assertNotNull(SiteContent::get('home')['hero_media']);
         $this->assertStringContainsString('/storage/media/', SiteContent::forFrontend('fa')['images']['homeHero']['src']);
     }
