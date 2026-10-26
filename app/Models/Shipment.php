@@ -12,17 +12,32 @@ class Shipment extends Model
     protected $fillable = [
         'quote_request_id', 'customer_name', 'customer_phone', 'internal_notes',
         'transport_mode', 'origin', 'destination', 'cargo_description', 'estimated_delivery',
+        'invoice_amount', 'cost_amount', 'paid_amount', 'invoiced_at',
     ];
+
+    /** Roles that see and edit the money fields (App\Support\Roles). */
+    public const FINANCE_ROLES = ['admin', 'finance'];
 
     protected function casts(): array
     {
         return [
             'estimated_delivery' => 'date',
+            'invoiced_at' => 'date',
+            'invoice_amount' => 'integer',
+            'cost_amount' => 'integer',
+            'paid_amount' => 'integer',
         ];
     }
 
     protected static function booted(): void
     {
+        static::saving(function (Shipment $shipment): void {
+            // An invoice without a date counts as issued today.
+            if ($shipment->invoice_amount && ! $shipment->invoiced_at) {
+                $shipment->invoiced_at = now()->toDateString();
+            }
+        });
+
         static::creating(function (Shipment $shipment): void {
             if (blank($shipment->tracking_code)) {
                 $shipment->tracking_code = static::newTrackingCode();
@@ -88,5 +103,16 @@ class Shipment extends Model
         $latest = $this->events()->first();
 
         $this->forceFill(['current_stage_id' => $latest?->tracking_stage_id])->saveQuietly();
+    }
+
+    public function profit(): ?int
+    {
+        return $this->invoice_amount === null ? null : $this->invoice_amount - (int) $this->cost_amount;
+    }
+
+    /** Still to be received from the customer. */
+    public function balance(): int
+    {
+        return max(0, (int) $this->invoice_amount - (int) $this->paid_amount);
     }
 }

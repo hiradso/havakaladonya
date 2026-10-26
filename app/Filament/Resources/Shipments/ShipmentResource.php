@@ -10,6 +10,7 @@ use App\Filament\Resources\Shipments\RelationManagers\EventsRelationManager;
 use App\Models\QuoteRequest;
 use App\Models\Shipment;
 use App\Models\TrackingStage;
+use App\Support\Digits;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -20,8 +21,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Text;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -31,9 +35,9 @@ class ShipmentResource extends Resource
 {
     protected static ?string $model = Shipment::class;
 
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedTruck;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
-    protected static string | UnitEnum | null $navigationGroup = 'عملیات';
+    protected static string|UnitEnum|null $navigationGroup = 'عملیات';
 
     protected static ?int $navigationSort = 1;
 
@@ -54,6 +58,8 @@ class ShipmentResource extends Resource
         return $schema->components([
             Section::make('نمایش به مشتری')
                 ->description('این اطلاعات در صفحه‌ی رهگیری سایت به مشتری نشان داده می‌شود.')
+                // Finance only fills in the money section; the rest stays read-only for them.
+                ->disabled(fn () => static::financeOnly())
                 ->schema([
                     TextInput::make('tracking_code')
                         ->label('کد رهگیری')
@@ -75,8 +81,37 @@ class ShipmentResource extends Resource
                     DatePicker::make('estimated_delivery')->label('تاریخ تقریبی تحویل')->native(false),
                 ]),
 
+            Section::make('مالی')
+                ->description('فقط مدیر کل و مالی این بخش را می‌بینند. مبالغ به تومان؛ سود و مانده خودکار حساب می‌شود.')
+                ->icon('heroicon-o-banknotes')
+                ->visible(fn () => auth()->user()?->hasRole(...Shipment::FINANCE_ROLES))
+                ->columnSpanFull()
+                ->schema([
+                    Grid::make(['default' => 1, 'sm' => 2, 'lg' => 4])->schema([
+                        static::moneyInput('invoice_amount', 'مبلغ فاکتور (فروش)'),
+                        static::moneyInput('cost_amount', 'هزینه‌ی تمام‌شده'),
+                        static::moneyInput('paid_amount', 'دریافتی تا امروز')->default(0),
+                        DatePicker::make('invoiced_at')
+                            ->label('تاریخ فاکتور')
+                            ->native(false)
+                            ->helperText('خالی بماند، تاریخ امروز ثبت می‌شود.'),
+                    ]),
+                    Text::make(function (Get $get): string {
+                        $invoice = (int) static::moneyValue($get('invoice_amount'));
+                        if ($invoice === 0) {
+                            return 'هنوز فاکتوری ثبت نشده است.';
+                        }
+                        $profit = $invoice - (int) static::moneyValue($get('cost_amount'));
+                        $balance = max(0, $invoice - (int) static::moneyValue($get('paid_amount')));
+                        $margin = round($profit / $invoice * 100, 1);
+
+                        return Digits::toPersian('سود: '.number_format($profit).' تومان ('.$margin.'٪) · مانده‌ی دریافت: '.number_format($balance).' تومان');
+                    }),
+                ]),
+
             Section::make('داخلی')
                 ->description('مشتری این بخش را نمی‌بیند.')
+                ->disabled(fn () => static::financeOnly())
                 ->schema([
                     TextInput::make('customer_name')->label('نام مشتری')->required()->maxLength(255),
                     TextInput::make('customer_phone')
@@ -94,6 +129,38 @@ class ShipmentResource extends Resource
                     Textarea::make('internal_notes')->label('یادداشت داخلی')->rows(4),
                 ]),
         ])->columns(['default' => 1, 'lg' => 2]);
+    }
+
+    /** The finance role: may edit money, nothing else. */
+    public static function financeOnly(): bool
+    {
+        return auth()->user()?->hasRole('finance') ?? false;
+    }
+
+    private static function moneyInput(string $name, string $label): TextInput
+    {
+        return TextInput::make($name)
+            ->label($label)
+            ->suffix('تومان')
+            ->inputMode('numeric')
+            ->live(onBlur: true)
+            ->extraInputAttributes(['dir' => 'ltr'])
+            ->mask(RawJs::make('$money($input)'))
+            ->stripCharacters(',')
+            ->dehydrateStateUsing(fn ($state) => static::moneyValue($state))
+            ->rule(fn () => function (string $attribute, $value, \Closure $fail): void {
+                if ($value !== null && $value !== '' && static::moneyValue($value) === null) {
+                    $fail('فقط عدد وارد کنید.');
+                }
+            });
+    }
+
+    /** "12,500,000" or "۱۲٬۵۰۰٬۰۰۰" → 12500000; empty → null. */
+    public static function moneyValue(mixed $value): ?int
+    {
+        $digits = preg_replace('/\D+/', '', Digits::toLatin((string) $value)) ?? '';
+
+        return $digits === '' ? null : (int) $digits;
     }
 
     public static function table(Table $table): Table
@@ -118,6 +185,19 @@ class ShipmentResource extends Resource
                 TextColumn::make('currentStage.name_fa')->label('وضعیت فعلی')->badge()
                     ->color(fn (Shipment $record) => $record->currentStage?->is_final ? 'success' : 'info')
                     ->placeholder('—'),
+                TextColumn::make('invoice_amount')->label('فاکتور (تومان)')
+                    ->numeric()
+                    ->sortable()
+                    ->placeholder('—')
+                    ->visible(fn () => auth()->user()?->hasRole(...Shipment::FINANCE_ROLES))
+                    ->toggleable(),
+                TextColumn::make('profit')->label('سود (تومان)')
+                    ->state(fn (Shipment $record) => $record->profit())
+                    ->numeric()
+                    ->color(fn ($state) => $state !== null && $state < 0 ? 'danger' : 'success')
+                    ->placeholder('—')
+                    ->visible(fn () => auth()->user()?->hasRole(...Shipment::FINANCE_ROLES))
+                    ->toggleable(),
                 TextColumn::make('updated_at')->label('آخرین تغییر')->since()->sortable(),
             ])
             ->filters([

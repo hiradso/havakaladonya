@@ -10,7 +10,8 @@ class ShipmentPolicy
 {
     private const VIEW = ['admin', 'sales_ops', 'finance'];
 
-    private const EDIT = ['admin', 'sales_ops'];
+    /** Finance may open a shipment to fill in its money fields; everything else stays read-only for them. */
+    private const EDIT = ['admin', 'sales_ops', 'finance'];
 
     private const DELETE = ['admin'];
 

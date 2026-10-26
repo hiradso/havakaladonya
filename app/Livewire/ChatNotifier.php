@@ -5,8 +5,10 @@ namespace App\Livewire;
 use App\Filament\Pages\ChatInbox;
 use App\Models\ChatMessage;
 use App\Support\ChatPresence;
+use App\Support\Roles;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 /**
@@ -24,7 +26,7 @@ class ChatNotifier extends Component
 
     public function check(): void
     {
-        if (! auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM)) {
+        if (! auth()->user()?->hasRole(...Roles::CUSTOMER_TEAM)) {
             return;
         }
 
@@ -46,7 +48,7 @@ class ChatNotifier extends Component
 
         Notification::make()
             ->title("پیام جدید از {$name}")
-            ->body(\Illuminate\Support\Str::limit($latest->body, 120))
+            ->body(Str::limit($latest->body, 120))
             ->icon('heroicon-o-chat-bubble-left-right')
             ->info()
             ->actions([
@@ -54,29 +56,40 @@ class ChatNotifier extends Component
             ])
             ->send();
 
-        $this->dispatch('hkd-chat-new', name: $name, body: \Illuminate\Support\Str::limit($latest->body, 120));
+        $this->dispatch('hkd-chat-new', name: $name, body: Str::limit($latest->body, 120));
     }
 
     public function render(): string
     {
+        // The handler lives in a method: Alpine event attributes must be expressions, and a bare
+        // `try { ... }` statement there is a syntax error that silently disabled the sound.
         return <<<'BLADE'
-            <div wire:poll.8s="check" x-data x-on:hkd-chat-new.window="
-                // Short two-tone beep (no audio file needed)
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    [880, 660].forEach((f, i) => {
-                        const o = ctx.createOscillator(); const g = ctx.createGain();
-                        o.frequency.value = f; o.connect(g); g.connect(ctx.destination);
-                        g.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.18);
-                        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 0.16);
-                        o.start(ctx.currentTime + i * 0.18); o.stop(ctx.currentTime + i * 0.18 + 0.17);
-                    });
-                } catch (e) {}
-                // Browser notification when the panel tab is in the background
-                if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
-                    new Notification('پیام جدید از ' + $event.detail.name, { body: $event.detail.body, icon: '/images/brand/favicon-32.png' });
-                }
-            " x-init="if ('Notification' in window && Notification.permission === 'default') { document.addEventListener('click', () => Notification.requestPermission(), { once: true }); }"></div>
+            <div
+                wire:poll.8s="check"
+                x-data="{
+                    alert(detail) {
+                        try {
+                            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                            [880, 660].forEach((f, i) => {
+                                const o = ctx.createOscillator(); const g = ctx.createGain();
+                                o.frequency.value = f; o.connect(g); g.connect(ctx.destination);
+                                g.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.18);
+                                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 0.16);
+                                o.start(ctx.currentTime + i * 0.18); o.stop(ctx.currentTime + i * 0.18 + 0.17);
+                            });
+                        } catch (e) {}
+                        if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+                            new Notification('پیام جدید از ' + detail.name, { body: detail.body, icon: '/images/brand/favicon-32.png' });
+                        }
+                    },
+                    init() {
+                        if ('Notification' in window && Notification.permission === 'default') {
+                            document.addEventListener('click', () => Notification.requestPermission(), { once: true });
+                        }
+                    },
+                }"
+                x-on:hkd-chat-new.window="alert($event.detail)"
+            ></div>
         BLADE;
     }
 }

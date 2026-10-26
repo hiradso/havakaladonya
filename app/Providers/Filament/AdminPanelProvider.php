@@ -2,25 +2,27 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
+use App\Support\Roles;
 use App\Support\Theme;
 use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\View\PanelsRenderHook;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Number;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Foundation\Vite;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Number;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -112,7 +114,15 @@ class AdminPanelProvider extends PanelProvider
                     })();
                 </script>
                 HTML)
+            // Dashboard charts (Apache ECharts), loaded only on the dashboard.
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => Dashboard::hasCharts()
+                    ? (string) app(Vite::class)(['resources/js/admin/charts.ts'])
+                    : '',
+                scopes: Dashboard::class,
+            )
             // Live chat: sound + notification for new visitor messages on every panel page.
-            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->user()?->hasRole(...\App\Support\Roles::CUSTOMER_TEAM) ? Blade::render('<livewire:chat-notifier />') : '');
+            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => auth()->user()?->hasRole(...Roles::CUSTOMER_TEAM) ? Blade::render('<livewire:chat-notifier />') : '');
     }
 }
