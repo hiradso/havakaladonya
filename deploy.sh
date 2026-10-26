@@ -13,13 +13,20 @@ export COMPOSER_ALLOW_SUPERUSER=1
 exec 9>/tmp/havakaladonya-deploy.lock
 flock -n 9 || { echo "Another deploy is running."; exit 1; }
 
-before=$(git rev-parse HEAD)
+# Compare with the last *deployed* commit (not just the last pulled one), so a manual
+# `git pull` before running this script still triggers npm/composer when their files changed.
+STATE_FILE="$APP_DIR/storage/app/.last-deploy"
+before=$(cat "$STATE_FILE" 2>/dev/null || echo "")
 git fetch --quiet origin main
 git reset --hard --quiet origin/main
 after=$(git rev-parse HEAD)
 echo "Deploying ${before:0:7} → ${after:0:7}"
 
-changed() { [ "$before" != "$after" ] && git diff --name-only "$before" "$after" | grep -qE "$1"; }
+# First run (no record) or unknown commit: treat everything as changed.
+changed() {
+    if [ -z "$before" ] || ! git cat-file -e "$before^{commit}" 2>/dev/null; then return 0; fi
+    git diff --name-only "$before" "$after" | grep -qE "$1"
+}
 
 if changed '^composer\.(json|lock)$' || [ ! -d vendor ]; then
     composer install --no-dev --optimize-autoloader --no-interaction --quiet
@@ -33,7 +40,7 @@ php artisan migrate --force
 if changed '^package(-lock)?\.json$' || [ ! -d node_modules ]; then
     npm ci --no-audit --no-fund --silent
 fi
-if [ "$before" = "$after" ] || changed '^(resources/(js|css)|vite\.config|package|tsconfig)'; then
+if [ "$before" = "$after" ] || changed '^(resources/(js|css)|vite\.config|package|tsconfig)' || [ ! -f public/build/manifest.json ]; then
     npm run build:ssr --silent
 fi
 
@@ -44,6 +51,7 @@ chown -R www-data:www-data storage bootstrap/cache
 
 php artisan up
 trap - EXIT
+echo "$after" > "$STATE_FILE"
 supervisorctl restart all >/dev/null
 sleep 3
 supervisorctl status
