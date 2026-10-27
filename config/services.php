@@ -14,6 +14,11 @@ return [
     |
     */
 
+    // Free key from the Telegram bot @navasan_contact_bot; backup source for the dashboard currency rates.
+    'navasan' => [
+        'key' => env('NAVASAN_API_KEY'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
