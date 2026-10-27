@@ -38,10 +38,7 @@ class ExchangeRatesWidget extends Widget
                 'changeText' => $r['change'] === null ? null : self::toman(abs($r['change'])),
                 'percentText' => $r['percent'] === null ? null : Digits::toPersian(str_replace('.', '٫', number_format(abs($r['percent']), 2))).'٪',
                 'direction' => ($r['change'] ?? 0) <=> 0,
-                'rangeText' => $r['high'] && $r['low']
-                    ? 'کمترین امروز: '.self::toman($r['low']).' — بیشترین: '.self::toman($r['high'])
-                    : null,
-                'quotedText' => $r['quotedAt'] ? 'آخرین قیمت در منبع: '.self::clock($r['quotedAt']) : null,
+                'tip' => self::tooltip($r),
                 'spark' => self::sparkline($r['trend']),
             ], $data['rates']),
             'stale' => $data['stale'],
@@ -49,6 +46,32 @@ class ExchangeRatesWidget extends Widget
             'updatedClock' => $data['fetchedAt'] ? self::clock($data['fetchedAt']) : null,
             'sourceText' => $data['source'] ? ExchangeRates::SOURCES[$data['source']] ?? $data['source'] : null,
         ];
+    }
+
+    /** Rich tooltip for a rate card (values are numbers we format ourselves, text is escaped). */
+    public static function tooltip(array $r): ?string
+    {
+        $rows = [];
+        if ($r['low'] && $r['high']) {
+            $rows[] = ['کمترین امروز', self::toman($r['low']), 'lo'];
+            $rows[] = ['بیشترین امروز', self::toman($r['high']), 'hi'];
+        }
+        if ($r['change'] !== null) {
+            $rows[] = ['تغییر از دیروز', ($r['change'] > 0 ? '+' : ($r['change'] < 0 ? '−' : '')).self::toman(abs($r['change'])), ''];
+        }
+        if (! $rows && ! $r['quotedAt']) {
+            return null;
+        }
+
+        $html = '<div class="hkd-tip">';
+        foreach ($rows as [$label, $value, $class]) {
+            $html .= '<div class="hkd-tip-row"><span>'.e($label).'</span><b class="'.$class.'" dir="ltr">'.e($value).'</b></div>';
+        }
+        if ($r['quotedAt']) {
+            $html .= '<div class="hkd-tip-foot">آخرین قیمت در منبع: ساعت '.e(self::clock($r['quotedAt'])).'</div>';
+        }
+
+        return $html.'</div>';
     }
 
     public static function toman(float $value): string

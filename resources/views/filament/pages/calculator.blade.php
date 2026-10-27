@@ -574,7 +574,7 @@
                 </h3>
                 <div class="hkc-hist">
                     <template x-for="(item, i) in history" x-bind:key="i">
-                        <button type="button" x-on:click="useHistory(item)" title="استفاده از این نتیجه">
+                        <button type="button" x-on:click="useHistory(item)" aria-label="استفاده از این نتیجه" x-tooltip="{ content: 'استفاده از این نتیجه', theme: $store.theme }">
                             <div class="e" x-text="item.e + ' ='"></div>
                             <div class="r" x-text="histView(item.r)"></div>
                         </button>

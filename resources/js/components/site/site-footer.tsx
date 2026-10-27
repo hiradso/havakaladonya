@@ -1,4 +1,5 @@
 import { useNavItems } from '@/components/site/site-header';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useI18n } from '@/i18n';
 import { useContact } from '@/lib/contact';
 import { Link } from '@inertiajs/react';
@@ -23,22 +24,28 @@ export default function SiteFooter() {
                     <strong className="text-lg font-black">{t.brand.name}</strong>
                     <p className="text-muted-foreground text-sm leading-7">{t.footer.about}</p>
                     {social.length > 0 && (
-                        <ul className="flex gap-2">
-                            {social.map(({ href, label, icon: Icon }) => (
-                                <li key={href}>
-                                    <a
-                                        href={href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        aria-label={label}
-                                        title={label}
-                                        className="bg-secondary text-muted-foreground hover:text-foreground flex size-10 items-center justify-center rounded-xl transition-colors"
-                                    >
-                                        <Icon className="size-5" aria-hidden="true" />
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
+                        <TooltipProvider delayDuration={150}>
+                            <ul className="flex gap-2">
+                                {social.map(({ href, label, icon: Icon }) => (
+                                    <li key={href}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <a
+                                                    href={href}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    aria-label={label}
+                                                    className="bg-secondary text-muted-foreground hover:text-foreground flex size-10 items-center justify-center rounded-xl transition-colors"
+                                                >
+                                                    <Icon className="size-5" aria-hidden="true" />
+                                                </a>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top">{label}</TooltipContent>
+                                        </Tooltip>
+                                    </li>
+                                ))}
+                            </ul>
+                        </TooltipProvider>
                     )}
                 </div>
 

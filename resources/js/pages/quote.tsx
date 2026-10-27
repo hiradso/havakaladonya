@@ -403,7 +403,7 @@ function FormCard({ title, children }: { title: string; children: ReactNode }) {
 
 function RequiredMark({ label }: { label: string }) {
     return (
-        <span className="text-destructive" title={label}>
+        <span className="text-destructive">
             *<span className="sr-only">({label})</span>
         </span>
     );

@@ -21,6 +21,7 @@
             .hkd-fx-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
             .hkd-fx-card{position:relative;overflow:hidden;border-radius:.85rem;padding:.85rem .9rem .7rem;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / .05);outline:1px solid rgb(3 7 18 / .06);transition:transform .2s ease,box-shadow .2s ease}
             .dark .hkd-fx-card{background:var(--gray-900);outline-color:rgb(255 255 255 / .08)}
+            .hkd-fx-card:focus-visible{outline:2px solid var(--primary-500)}
             .hkd-fx-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px rgb(0 0 0 / .25)}
             .hkd-fx-top{display:flex;align-items:center;gap:.55rem}
             .hkd-fx-sym{flex:none;display:grid;place-items:center;width:2rem;height:2rem;border-radius:.6rem;font-weight:700;font-size:.85rem;background:color-mix(in oklab,var(--primary-500) 16%,transparent);color:var(--primary-700)}
@@ -56,14 +57,14 @@
             @if ($updatedText)
                 <div class="hkd-fx-meta">
                     @if ($stale)
-                        <span class="hkd-fx-badge old" title="بیش از {{ \App\Support\Digits::toPersian((string) \App\Support\Rates\ExchangeRates::STALE_AFTER_MINUTES) }} دقیقه است که نرخ تازه دریافت نشده؛ پیش از قیمت‌دادن، نرخ روز را چک کنید.">
+                        <span class="hkd-fx-badge old" tabindex="0" x-tooltip="{ content: @js('بیش از '.\App\Support\Digits::toPersian((string) \App\Support\Rates\ExchangeRates::STALE_AFTER_MINUTES).' دقیقه است که نرخ تازه دریافت نشده؛ پیش از قیمت‌دادن، نرخ روز را چک کنید.'), theme: $store.theme, maxWidth: 260 }">
                             <x-filament::icon icon="heroicon-m-exclamation-triangle" style="width:.9rem;height:.9rem" />
                             نرخ قدیمی
                         </span>
                     @else
                         <span class="hkd-fx-badge live"><i></i> به‌روز</span>
                     @endif
-                    <span title="ساعت {{ $updatedClock }}">به‌روزرسانی: {{ $updatedText }}</span>
+                    <span tabindex="0" x-tooltip="{ content: @js('ساعت '.$updatedClock.' به وقت تهران — نرخ‌ها هر ۵ دقیقه خودکار گرفته می‌شوند'), theme: $store.theme, maxWidth: 260 }">به‌روزرسانی: {{ $updatedText }}</span>
                     @if ($sourceText)
                         <span>· منبع: {{ $sourceText }}</span>
                     @endif
@@ -80,7 +81,7 @@
             <div class="hkd-fx-grid">
                 @foreach ($rates as $rate)
                     @php($dir = $rate['direction'] > 0 ? 'up' : ($rate['direction'] < 0 ? 'down' : 'flat'))
-                    <div class="hkd-fx-card {{ $rate['stale'] && ! $stale ? 'is-old' : '' }}" wire:key="fx-{{ $rate['code'] }}" title="{{ collect([$rate['rangeText'], $rate['quotedText']])->filter()->implode("\n") }}">
+                    <div class="hkd-fx-card {{ $rate['stale'] && ! $stale ? 'is-old' : '' }}" wire:key="fx-{{ $rate['code'] }}" @if ($rate['tip']) tabindex="0" x-tooltip="{ content: @js($rate['tip']), allowHTML: true, theme: $store.theme, placement: 'bottom', maxWidth: 300 }" @endif\n") }}">
                         @if ($rate['stale'] && ! $stale)
                             <span class="hkd-fx-old">قدیمی</span>
                         @endif

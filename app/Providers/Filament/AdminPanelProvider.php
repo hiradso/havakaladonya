@@ -85,6 +85,24 @@ class AdminPanelProvider extends PanelProvider
                 .fi-fo-file-upload .filepond--item-panel, .fi-fo-rich-editor img, .fi-prose img { border-radius: .75rem; }
                 .fi-ta-image:not(.fi-circular) img { border-radius: .5rem; object-fit: cover; }
                 .fi-ta-image.fi-circular img, .fi-user-avatar, .fi-avatar { border-radius: 9999px; }
+                /* Tooltips (tippy): rounded, soft shadow, readable Persian text, in both themes. */
+                .tippy-box { border-radius: .75rem; font-family: inherit; font-size: .78rem; line-height: 1.8;
+                    --tippy-background-color: #1f2937; color: #f9fafb;
+                    box-shadow: 0 12px 32px -12px rgb(0 0 0 / .45), 0 0 0 1px rgb(255 255 255 / .06); }
+                .tippy-box > .tippy-content { padding: .45rem .8rem; }
+                .tippy-box[data-theme~="light"] { --tippy-background-color: #fff; color: #374151;
+                    --tippy-box-shadow: 0 12px 32px -12px rgb(15 23 42 / .28), 0 0 0 1px rgb(15 23 42 / .07); }
+                .tippy-box[data-theme~="dark"] { --tippy-background-color: #1f2937; color: #f3f4f6;
+                    box-shadow: 0 12px 32px -10px rgb(0 0 0 / .7), 0 0 0 1px rgb(255 255 255 / .09); }
+                .tippy-box .hkd-tip { display: grid; gap: .2rem; min-width: 11rem; }
+                .tippy-box .hkd-tip-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+                .tippy-box .hkd-tip-row span { opacity: .7; }
+                .tippy-box .hkd-tip-row b { font-weight: 700; font-variant-numeric: tabular-nums; }
+                .tippy-box .hkd-tip-row b.lo { color: #dc2626; } .tippy-box .hkd-tip-row b.hi { color: #16a34a; }
+                .tippy-box[data-theme~="dark"] .hkd-tip-row b.lo { color: #f87171; }
+                .tippy-box[data-theme~="dark"] .hkd-tip-row b.hi { color: #4ade80; }
+                .tippy-box .hkd-tip-foot { margin-top: .25rem; padding-top: .3rem; border-top: 1px solid currentColor;
+                    border-top-color: color-mix(in oklab, currentColor 15%, transparent); font-size: .7rem; opacity: .7; }
             </style>')
             // Persian digits in the panel: Filament formats page numbers and "showing 1 to 10 of 36"
             // with Number::format (fa locale gives ۱۲۳); badges and "per page" options are plain text,
